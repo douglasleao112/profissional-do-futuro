@@ -1,0 +1,3854 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>Profissional do Futuro - Área de Membros</title>
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Profissional do Futuro" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/app/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/app/apple-touch-icon.png" />
+
+  <style>
+    /* ================= VARIÁVEIS DE TEMA ================= */
+    :root{
+      /* --- MODO ESCURO (Padrão) --- */
+      --bg-page: #111827;       /* Fundo principal escuro */
+      --text-main: #f9fafb;     /* Texto claro */
+      --brand-green: #3b82f6;   /* Verde da marca */
+
+      /* Variações Dark */
+      --bg-card: #1f2937;       /* Cartões ligeiramente mais claros */
+      --bg-hover: #374151;
+      --border-subtle: rgba(249, 250, 251, 0.1); /* Bordas sutis claras */
+      --text-muted: #9ca3af;
+      --star-color: #fbbf24;
+      --radius: 12px;
+      --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+      --header-bg: rgba(17, 24, 39, 0.8); /* Fundo do header semi-transparente */
+    }
+
+    /* --- MODO CLARO (Ativado via JS) --- */
+    [data-theme="light"] {
+      --bg-page: #f9fafb;       /* Fundo principal claro */
+      --text-main: #111827;     /* Texto escuro */
+
+      /* Variações Light */
+      --bg-card: #ffffff;       /* Cartões brancos */
+      --bg-hover: #f3f4f6;
+      --border-subtle: rgba(17, 24, 39, 0.1); /* Bordas sutis escuras */
+      --text-muted: #6b7280;
+      --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --header-bg: rgba(249, 250, 251, 0.8);
+    }
+
+    /* ================= ESTILOS GERAIS ================= */
+    * { box-sizing:border-box; outline:none; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      /* Transição suave ao trocar de tema */
+      transition: background-color 0.3s ease, color 0.3s ease;
+      padding-top: 70px; /* Espaço para o header fixo */
+    }
+
+    a { text-decoration: none; color: inherit; transition: 0.2s; }
+    button { cursor: pointer; }
+
+    /* ================= HEADER (NOVO) ================= */
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 24px;
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+  z-index: 100;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerLogoBtn {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.headerLogoBtn:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 4px; border-radius: 4px; }
+
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+    .logo-img {
+      height: 32px; /* Tamanho controlado da logo */
+      width: auto;
+      display: block;
+    }
+
+    /* Botão de Alternar Tema */
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .theme-toggle-btn:hover {
+      background-color: var(--border-subtle);
+      transform: rotate(15deg);
+    }
+    .theme-toggle-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Lógica de ícones Sol/Lua */
+    /* Se o tema NÂO for light (é dark), esconde o sol e mostra a lua */
+    :root:not([data-theme="light"]) .icon-sun { display: none; }
+    :root:not([data-theme="light"]) .icon-moon { display: block; }
+
+    /* Se o tema FOR light, mostra o sol e esconde a lua */
+    [data-theme="light"] .icon-sun { display: block; }
+    [data-theme="light"] .icon-moon { display: none; }
+
+
+    /* ================= LAYOUT PRINCIPAL ================= */
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* === ÁREA DO PLAYER === */
+    .playerWrapper {
+      position: relative;
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      background: #000; /* Player de vídeo sempre fundo preto */
+    }
+
+    .player {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+
+    .playerWrapper.materialEmbed {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .playerWrapper.materialEmbed .player {
+      aspect-ratio: auto;
+      height: min(72vh, 720px);
+      min-height: 520px;
+    }
+
+    iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    /* Informações da Aula */
+    .lessonInfo { padding: 0 4px; }
+
+    .headerRow {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .lessonTitle {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .lessonTag {
+      font-size: 0.56rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brand-green);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 3px 7px;
+      border-radius: 4px;
+      align-self: flex-start;
+    }
+
+    /* Controles e Avaliação */
+    .controlsRow {
+      width: 100%;
+      min-height: 44px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .controlsRow .navBtn { pointer-events: auto; }
+    .controlsRow .starsOnly { margin: 0; }
+
+    .navBtn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.55rem;
+      transition: all 0.2s ease;
+      box-shadow: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,.22);
+    }
+    .navBtn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .navBtn:hover:not(:disabled) {
+      background: var(--bg-hover);
+      border-color: var(--brand-green);
+      color: var(--brand-green);
+      transform: scale(1.05);
+    }
+    .navBtn:disabled { visibility: hidden; opacity: 0; pointer-events: none; }
+
+    .starsOnly { display: flex; align-items: center; gap: 0; margin: 0 auto 6px; }
+    .starBtn {
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      color: var(--border-subtle); /* Cor da estrela vazia se adapta ao tema */
+      transition: transform 0.2s, color 0.2s;
+      padding: 0 2px;
+    }
+    .headerRow .starBtn { padding: 0 2px; font-size: 1.55rem; line-height: 1; }
+    /* No modo claro, a estrela vazia precisa ser mais visível */
+    [data-theme="light"] .starBtn { color: #d1d5db; }
+
+    .starBtn:hover { transform: scale(1.15); }
+    .starBtn.on { color: var(--star-color); }
+
+    /* Descrição e Downloads */
+    .descArea {
+      margin: 0 0 20px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .descArea p { margin: 0; white-space: pre-wrap; }
+
+    .actionLinks {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .linkBtn {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--brand-green);
+      background: var(--brand-green);
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.22);
+    }
+    .linkBtn:hover {
+      border-color: #068f63;
+      color: #fff;
+      background: #068f63;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.32);
+    }
+    .linkBtn.primary {
+      background: var(--brand-green);
+      border-color: var(--brand-green);
+      color: #fff;
+    }
+    .linkBtn.primary:hover {
+      background: #068f63;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .dietActions {
+      width: 100%;
+      display: grid;
+      gap: 10px;
+    }
+
+    .dietPhaseBtn {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .dietPhaseBtn.locked {
+      background: var(--bg-card);
+      border-color: var(--border-subtle);
+      color: var(--text-muted);
+      box-shadow: none;
+      cursor: not-allowed;
+      text-transform: none;
+    }
+
+    .dietPhaseBtn.locked:hover {
+      background: var(--bg-card);
+      border-color: var(--border-subtle);
+      color: var(--text-muted);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .dietChangeBtn {
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-decoration: underline;
+      justify-self: center;
+      padding: 5px;
+    }
+
+    .dietModalOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(4px);
+    }
+
+    .dietModalOverlay.open { display: flex; }
+
+    .dietModal {
+      width: min(100%, 390px);
+      padding: 26px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+    }
+
+    .dietModal h3 { margin: 0 0 8px; font-size: 1.3rem; }
+    .dietModal p { margin: 0 0 20px; color: var(--text-muted); }
+    .dietModalChoices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dietModalChoices button { border: 0; border-radius: 10px; padding: 14px; background: var(--brand-green); color: #fff; font-weight: 800; }
+    .dietModal { position: relative; }
+    .dietModalCancel,
+    .wizardClose {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 1.55rem;
+      line-height: 1;
+      z-index: 3;
+    }
+    .dietModalCancel:hover,
+    .wizardClose:hover { background: var(--bg-hover); color: var(--text-main); }
+
+    .calorieWizardOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(5px);
+    }
+
+    .calorieWizardOverlay.open { display: flex; }
+
+    .calorieWizard {
+      position: relative;
+      width: min(100%, 430px);
+      max-height: calc(100vh - 32px);
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      padding: 26px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .calorieWizard::-webkit-scrollbar { width: 5px; }
+    .calorieWizard::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 999px; }
+
+    .wizardProgress { height: 6px; margin-bottom: 22px; overflow: hidden; border-radius: 999px; background: var(--border-subtle); }
+    .calorieWizard:not(.profileFullscreen) .wizardProgress { margin-right: 36px; }
+    .wizardProgressBar { width: 0; height: 100%; border-radius: inherit; background: var(--brand-green); transition: width .25s ease; }
+    .wizardStepLabel { margin-bottom: 5px; color: var(--brand-green); font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .calorieWizard h3 { margin: 0 0 7px; font-size: 1.35rem; }
+    .wizardHint { margin: 0 0 20px; color: var(--text-muted); font-size: .9rem; }
+    .wizardField { display: grid; gap: 10px; }
+    .wizardField input, .wizardField select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      background: var(--bg-page);
+      color: var(--text-main);
+      font: inherit;
+    }
+    .wizardChoices { display: grid; gap: 10px; }
+    .wizardChoice { padding: 13px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-page); color: var(--text-main); font-weight: 700; text-align: left; }
+    .wizardChoice.selected { border-color: var(--brand-green); background: rgba(59,130,246,.14); color: var(--brand-green); }
+    .wizardNav { display: flex; gap: 10px; margin-top: 22px; }
+    .wizardNav button { flex: 1; padding: 13px; border-radius: 10px; font-weight: 800; }
+    .wizardBack { border: 1px solid var(--border-subtle); background: transparent; color: var(--text-main); }
+    .wizardNext { border: 1px solid var(--brand-green); background: var(--brand-green); color: #fff; }
+    .wizardError { min-height: 20px; margin-top: 10px; color: #ef4444; font-size: .82rem; }
+    .calorieResult { text-align: center; }
+    .calorieResultValue { margin: 12px 0 2px; color: var(--brand-green); font-size: 2.4rem; font-weight: 900; line-height: 1; }
+    .calorieResultUnit { color: var(--text-muted); font-size: .9rem; }
+    .calorieResultNote { margin: 18px 0; padding: 12px; border-radius: 10px; background: rgba(59,130,246,.1); color: var(--text-main); font-size: .88rem; }
+
+    .profileGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+    .profileItem { padding: 13px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-page); }
+    .profileItem.full { grid-column: 1 / -1; }
+    .profileLabel { display: block; margin-bottom: 3px; color: var(--text-muted); font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+    .profileValue { display: block; color: var(--text-main); font-size: .95rem; font-weight: 750; }
+    .profileActions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+    .profileActions .linkBtn { width: 100%; justify-content: center; padding-left: 10px; padding-right: 10px; }
+    .profileActions .secondary { background: transparent; color: var(--brand-green); box-shadow: none; }
+    .profileTabs { display:flex; align-items:stretch; gap:0; padding:0; border:0; background:transparent; }
+    .profileTab { position:relative; flex:1; min-height:48px; padding:12px 14px; border:1px solid var(--border-subtle); border-radius:0; background:var(--bg-page); color:var(--text-muted); font-weight:800; cursor:pointer; transition:color .2s ease, background .2s ease; }
+    .profileTab + .profileTab { border-left:0; }
+    .profileTab::before { display:none; }
+    .profileTab::after { content:""; position:absolute; right:18px; bottom:-1px; left:18px; height:3px; border-radius:0; background:transparent; transition:background .2s ease; }
+    .profileTab.active { z-index:1; color:var(--brand-green); background:var(--bg-card); border-bottom-color:var(--bg-card); }
+    .profileTab.active::after { background:var(--brand-green); }
+    .profilePane { display: none; }
+    .profilePane.active { display:block; min-height:300px; margin-top:-1px; padding:14px; border:1px solid var(--border-subtle); border-radius:0; background:var(--bg-card); box-shadow:none; }
+    .profileActions .secondary:hover { background: rgba(59,130,246,.1); color: var(--brand-green); }
+    #profileOverlay { inset:70px 0 0; z-index:90; padding:20px; background:rgba(0,0,0,.58); backdrop-filter:blur(4px); }
+    #profileOverlay.open { display: flex; }
+    #profileOverlay .profileFullscreen {
+      width: min(100%,560px);
+      height: auto;
+      max-height: calc(100dvh - 110px);
+      padding: 0;
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      background: var(--bg-card);
+      box-shadow: 0 18px 55px rgba(0,0,0,.3);
+      overflow-y: auto;
+    }
+    .profileBody { width:100%; margin:0 auto; padding:24px 20px 30px; }
+    @media (max-width: 720px) {
+      #profileOverlay { top:60px; padding:12px; }
+      #profileOverlay .profileFullscreen { max-height:calc(100dvh - 84px); border-radius:14px; }
+    }
+    .profileActions.single { grid-template-columns: 1fr; }
+    .hydrationAlert { margin: 18px 0; padding: 13px; border: 1px solid transparent; border-radius: 10px; font-size: .9rem; font-weight: 700; }
+    .hydrationAlert.danger { color: #991b1b; background: #fee2e2; border-color: #f87171; }
+    .hydrationAlert.warning { color: #92400e; background: #fef3c7; border-color: #f59e0b; }
+    .hydrationAlert.good { color: #047857; background: #d1fae5; border-color: #10b981; }
+    .hydrationAlert.high { color: #9a3412; background: #ffedd5; border-color: #f97316; }
+    :root:not([data-theme="light"]) .hydrationAlert.warning { color: #fde68a; background: rgba(217,119,6,.2); }
+    :root:not([data-theme="light"]) .hydrationAlert.danger { color: #fecaca; background: rgba(220,38,38,.24); border-color: rgba(248,113,113,.65); }
+    :root:not([data-theme="light"]) .hydrationAlert.good { color: #6ee7b7; background: rgba(5,150,105,.2); }
+    :root:not([data-theme="light"]) .hydrationAlert.high { color: #fdba74; background: rgba(234,88,12,.2); }
+    .objectivePicker { text-align: center; }
+    .objectiveAvatar { display: block; width: auto; height: 125px; max-width: 100%; margin: 6px auto 12px; object-fit: contain; }
+    .objectiveRangeWrap { position: relative; padding-top: 35px; margin: 0 2px 18px; }
+    .objectiveRangeLabel { position: absolute; top: 0; left: var(--objective-progress); transform: translateX(-50%); padding: 5px 10px; border: 1px solid var(--border-subtle); border-radius: 999px; background: var(--bg-card); color: var(--text-main); font-size: .78rem; font-weight: 800; white-space: nowrap; }
+    .objectiveRange { width: 100%; accent-color: var(--brand-green); cursor: grab; }
+    .objectiveDragHint { margin: 6px 0 18px; color: var(--text-muted); font-size: .8rem; }
+    .objectiveGenderChoices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+    .objectiveGenderChoices button { min-height: 54px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--bg-card); color: var(--text-main); font-weight: 800; cursor: pointer; }
+    .objectiveDiagnosis { margin-top: 18px; padding: 15px; border-radius: 12px; background: rgba(59,130,246,.1); color: var(--text-main); line-height: 1.55; text-align: left; }
+
+    /* === LISTA DE MÓDULOS (Accordion) === */
+    .modulesContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .modItem {
+      --module-radius: 8px;
+      position: relative;
+      background: var(--bg-card);
+      border-radius: var(--module-radius);
+      overflow: hidden;
+      border: 1px solid var(--brand-green);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .modItem.open {
+      border-color: var(--brand-green);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .modHeader {
+      width: 100%;
+      padding: 18px 24px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      transition: background 0.2s;
+      border-radius: calc(var(--module-radius) - 1px) calc(var(--module-radius) - 1px) 0 0;
+    }
+    .modItem:not(.open) .modHeader { border-radius: calc(var(--module-radius) - 1px); }
+    .modHeader:hover { background: var(--bg-hover); }
+
+    .modTitle { display: flex; align-items: center; justify-content: flex-start; gap: 8px; text-align: left; }
+    .modHeader > .chev { flex-shrink: 0; margin-left: auto; }
+
+.featuredStar {
+  display: inline-block;
+  color: #fbbf24;
+  font-size: 1rem;
+  line-height: 1;
+  transform-origin: center;
+  animation: featuredStarGlow 1.8s ease-in-out infinite;
+}
+.lessonTitleStar { margin-left: 7px; }
+
+@keyframes featuredStarGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(251,191,36,.55)); opacity: .85; }
+  50% { transform: scale(1.22); filter: drop-shadow(0 0 8px rgba(251,191,36,1)); opacity: 1; }
+}
+
+.lessonRight { display: flex; align-items: center; gap: 12px; }
+.moduleLock { color: #fbbf24; font-size: .9rem; filter: drop-shadow(0 0 5px rgba(251,191,36,.45)); }
+.modItem.lockedModule .lessonItem { cursor: pointer; opacity: .68; }
+.modItem.lockedModule .lessonItem:hover { opacity: 1; background: rgba(251,191,36,.07); }
+.modItem.lockedModule .lessonItem .statusIcon { color: #fbbf24; opacity: 1; }
+.eliteOfferPrice { margin: 10px 0 3px; color: var(--brand-green); font-size: 1.7rem; font-weight: 900; }
+
+@media (prefers-reduced-motion: reduce) {
+  .featuredStar { animation: none; }
+}
+
+    .chev {
+      width: 13px; height: 13px;
+      flex: 0 0 13px;
+      display: grid;
+      place-items: center;
+      transition: transform 0.3s ease;
+      color: var(--text-muted);
+    }
+    .chev svg { width: 13px; height: 13px; }
+    .modItem.open .chev { transform: rotate(180deg); color: var(--brand-green); }
+
+    .modBody {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: var(--bg-page); /* Fundo interno do acordeão */
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+    .modItem.open .modBody { max-height: 2000px; }
+
+    /* Lista de Aulas */
+    .lessonItem {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .lessonItem:hover { background: var(--bg-hover); }
+
+    /* Item Ativo */
+    .lessonItem.active {
+      background: rgba(59, 130, 246, 0.08);
+    }
+    /* No modo claro, o fundo ativo precisa ser um pouco mais forte */
+    [data-theme="light"] .lessonItem.active { background: rgba(59, 130, 246, 0.15); }
+
+    [data-theme="light"] .modItem.activeModule {
+      border: 1px solid var(--brand-green);
+      background: #eafff7;
+      box-shadow: 0 7px 18px rgba(8,173,120,.12);
+    }
+    [data-theme="light"] .modItem.activeModule .modHeader { background:#e5fff5; }
+    [data-theme="light"] .modItem.activeModule .modTitle { color:#111827; text-shadow:none; }
+    [data-theme="light"] .modItem.activeModule .modBody { background:#f9fffc; }
+    [data-theme="light"] .modItem.activeModule .lessonItem.active { background:rgba(8,173,120,.035); }
+    [data-theme="light"] .modItem.activeModule .lessonItem.active::before { width:3px; background:#00b879; box-shadow:none; }
+    [data-theme="light"] .modItem.activeModule .lessonItem.active .liName { color:#111827; font-weight:700; text-shadow:none; }
+
+    :root:not([data-theme="light"]) .modItem.activeModule {
+      border:1px solid var(--brand-green);
+      background:rgba(16,201,139,.06);
+      box-shadow:0 7px 18px rgba(0,0,0,.28);
+    }
+    :root:not([data-theme="light"]) .modItem.activeModule .modHeader { background:rgba(16,201,139,.16); }
+    :root:not([data-theme="light"]) .modItem.activeModule .modTitle { color:var(--text-main); text-shadow:none; }
+    :root:not([data-theme="light"]) .modItem.activeModule .modBody { background:rgba(16,201,139,.025); }
+    :root:not([data-theme="light"]) .modItem.activeModule .lessonItem.active { background:rgba(16,201,139,.045); }
+    :root:not([data-theme="light"]) .modItem.activeModule .lessonItem.active::before { width:3px; background:#10c98b; box-shadow:none; }
+    :root:not([data-theme="light"]) .modItem.activeModule .lessonItem.active .liName { color:var(--text-main); font-weight:700; text-shadow:none; }
+
+    .modItem.activeModule .modHeader,
+    .modItem.activeModule .modHeader:hover { background:var(--brand-green); color:#fff; }
+    [data-theme="light"] .modItem.activeModule .modTitle,
+    :root:not([data-theme="light"]) .modItem.activeModule .modTitle,
+    .modItem.activeModule .chev { color:#fff; }
+
+    .lessonItem.active::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--brand-green);
+    }
+    .lessonItem.active .liName { color: var(--brand-green); font-weight: 700; }
+
+    .liContent { display: flex; flex-direction: column; gap: 6px; }
+    .liName { font-size: 0.84rem; font-weight: 500; color: var(--text-main); transition: color 0.2s;}
+    .liMeta {
+      display: flex;
+      gap: 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.56rem;
+  padding: 3px 7px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.badge.vid,
+.badge.mat {
+  padding: 3px 10px 3px 7px;
+  border-radius: 4px 0 0 4px;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%);
+}
+
+.badge.vid {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.badge.mat {
+  color: #6b7280;
+  background: rgba(107, 114, 128, 0.14);
+}
+
+.badge.rate {
+  color: var(--star-color);
+  background: rgba(251, 191, 36, 0.1);
+  border-radius: 4px;
+  padding: 3px 7px;
+}
+    .statusIcon { color: var(--text-muted); opacity: 0.5; transition: all 0.2s; }
+    .lessonItem:hover .statusIcon { opacity: 1; }
+    .lessonItem.active .statusIcon { color: var(--brand-green); opacity: 1; transform: scale(1.1); }
+
+    @media (max-width: 768px) {
+      .wrap { padding: 16px; gap: 24px;}
+      .main-header { padding: 0 16px; height: 60px; }
+      body { padding-top: 60px; }
+      .lessonTitle { font-size: 1.25rem; }
+      .controlsRow { right: 10px; left: 10px; height:48px; }
+      .navBtn { width: 36px; height: 36px; }
+      .starBtn { font-size: 1.4rem; }
+      .headerRow .starBtn { font-size: 1.5rem; }
+      .modHeader, .lessonItem { padding: 14px 16px; }
+      .modHeader { padding-left: 24px; padding-right: 24px; }
+      .main-header {  padding: 0 14px;  height: 60px;}
+      .logo-img {  height: 28px;}
+      .logoutBtn {  padding: 3px 6px;  font-size: 0.58rem;}
+     .calorieBtn {
+  padding: 2px 4px;
+  font-size: 0.44rem;
+  margin-right: 3px;
+  letter-spacing: 0;
+  max-width: 65px;
+  white-space: nowrap;
+}
+      .theme-toggle-btn {  padding: 6px;}
+      .playerWrapper.materialEmbed .player {
+        height: 68vh;
+        min-height: 460px;
+      }
+    }
+
+
+
+
+
+    /* ================= LOGIN START ================= */
+body.auth-locked {
+  padding-top: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+body.auth-locked .main-header,
+body.auth-locked .wrap {
+  display: none !important;
+}
+
+.loginScreen {
+  width: 100%;
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(59,130,246,0.22), transparent 32%),
+    var(--bg-page);
+}
+
+body.auth-locked .loginScreen {
+  display: flex;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.loginLogo {
+  height: 38px;
+  width: auto;
+  display: block;
+  margin: 0 auto 22px;
+}
+
+.loginTitle {
+  margin: 0;
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.loginSub {
+  margin: 8px 0 22px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.loginField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.loginField label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.loginField input {
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 13px 14px;
+  background: var(--bg-page);
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.loginField input:focus {
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14);
+}
+
+.loginSubmit {
+  width: 100%;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: var(--brand-green);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.98rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.loginSubmit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.loginMsg {
+  margin-top: 14px;
+  min-height: 22px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.loginMsg.error {
+  color: #ef4444;
+}
+
+.loginMsg.ok {
+  color: var(--brand-green);
+}
+
+.loginRegisterLink {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--brand-green);
+  font-size: .92rem;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.loginRegisterLink:hover { opacity: .78; }
+
+.logoutBtn {
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 4px 7px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.55;
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  opacity: 1;
+  border-color: var(--brand-green);
+  color: var(--brand-green);
+}
+
+.headerMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.menuBtn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  opacity: 0.75;
+  transition: all 0.2s ease;
+}
+
+.menuBtn:hover {
+  opacity: 1;
+ }
+
+.menuBtn span {
+  width: 15px;
+  height: 2px;
+  background: var(--text-main);
+  border-radius: 999px;
+  display: block;
+}
+
+.menuDropdown {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  min-width: 145px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  box-shadow: var(--shadow-soft);
+  padding: 6px;
+  display: none;
+  z-index: 999;
+}
+
+.headerMenu.open .menuDropdown {
+  display: block;
+}
+
+.menuDropdown a,
+.menuDropdown button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text-main);
+  display: block;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menuDropdown a:hover,
+.menuDropdown button:hover {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--brand-green);
+}
+.menuDropdown [hidden] { display: none; }
+.languageMenuItem { position:relative; }
+.languageSubmenu {
+  position:absolute;
+  left:calc(100% - 1px);
+  top:0;
+  width:126px;
+  display:none;
+  padding:6px;
+  border:1px solid var(--border-subtle);
+  border-radius:10px;
+  background:var(--bg-card);
+  box-shadow:var(--shadow-soft);
+  z-index:1001;
+}
+.languageMenuItem:hover .languageSubmenu,
+.languageMenuItem:focus-within .languageSubmenu,
+.languageMenuItem.open .languageSubmenu { display:block; }
+.languageSubmenu button { padding:10px!important; font-size:.76rem!important; }
+.languageSubmenu button.active { background:rgba(59,130,246,.12); color:var(--brand-green); }
+
+.installNudgeOverlay {
+  position: fixed;
+  z-index: 5000;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 14px;
+  background: rgba(3, 10, 18, .42);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, visibility .25s ease;
+}
+.installNudgeOverlay.open { opacity: 1; visibility: visible; }
+.installNudge {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  column-gap: 14px;
+  align-items: center;
+  width: min(100%, 520px);
+  padding: 24px 22px 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 22px 22px 14px 14px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  box-shadow: 0 -12px 38px rgba(0,0,0,.24);
+  transform: translateY(calc(100% + 30px));
+  transition: transform .32s cubic-bezier(.2,.8,.2,1);
+}
+.installNudgeOverlay.open .installNudge { transform: translateY(0); }
+.installNudgeIcon { display: block; width: 58px; height: 58px; margin: 0 0 18px; border-radius: 14px; }
+.installNudgeCopy { grid-column: 2; margin: 0 30px 18px 0; }
+.installNudgeCopy h3 { margin: 0 0 4px; font-size: 1rem; font-weight: 800; line-height: 1.3; }
+.installNudgeCopy p { margin: 0; color: var(--text-muted); line-height: 1.4; text-align: left; font-size: .86rem; }
+.installNudgeClose { position: absolute; top: 10px; right: 12px; width: 34px; height: 34px; border: 0; background: transparent; color: var(--text-muted); font-size: 1.35rem; cursor: pointer; }
+.installNudgeAction { grid-column: 1 / -1; width: 100%; min-height: 48px; border: 0; border-radius: 11px; background: var(--brand-green); color: #fff; font-weight: 800; cursor: pointer; }
+
+.appSplash { position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center; padding: 28px; background: #fff; animation: appSplashExit 2s ease forwards; }
+.appSplashLogo { display: block; width: min(34vw, 180px); height: auto; animation: appSplashLogo 2s cubic-bezier(.2,.8,.2,1) forwards; }
+body.appIntroLoading > *:not(.appSplash):not(script) { opacity: 0; }
+body.appIntroReady > *:not(script) { animation: appContentFadeIn .7s ease both; }
+@keyframes appSplashLogo {
+  0% { opacity: 0; transform: scale(.9); }
+  45% { opacity: 1; transform: scale(1); }
+  72% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); }
+}
+@keyframes appSplashExit {
+  0%, 82% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes appContentFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .appSplash { animation: none; }
+  .appSplashLogo { animation: none; }
+}
+
+    .pdfViewerOverlay {
+      position: fixed;
+      inset: 0 0 calc(70px + env(safe-area-inset-bottom)) 0;
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      background: var(--bg-page);
+    }
+    .pdfViewerOverlay.open { display: flex; }
+    body.pdfViewerOpen { overflow: hidden; }
+    .pdfViewerHeader {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 2px 7px;
+      border-bottom: 1px solid #252b31;
+      background: #30363d;
+    }
+    .pdfViewerClose {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 6px;
+      padding: 0;
+      color: #d6d9dc;
+      background: transparent;
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .pdfViewerClose:hover { color: #fff; background: #343a40; }
+    .pdfViewerPages { width:100%; flex:1; min-height:0; overflow:auto; padding:10px 8px 24px; background:#d9dde1; overscroll-behavior:contain; }
+    .pdfViewerPages canvas { display:block; max-width:100%; height:auto; margin:0 auto 10px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+    .pdfViewerStatus { min-height:60vh; display:grid; place-items:center; padding:24px; color:#4b5563; font-size:.9rem; text-align:center; }
+    .pdfViewerStatus.error { color:#991b1b; }
+    @media (max-width: 560px) {
+      .pdfViewerHeader { min-height: 32px; padding: 1px 5px; }
+    }
+
+    .memberBottomNav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4000;
+      min-height: 70px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding: 5px max(5px, env(safe-area-inset-right)) max(5px, env(safe-area-inset-bottom)) max(5px, env(safe-area-inset-left));
+      border-top: 1px solid var(--border-subtle);
+      background: color-mix(in srgb, var(--bg-card) 94%, transparent);
+      box-shadow: 0 -7px 24px rgba(0,0,0,.13);
+      backdrop-filter: blur(14px);
+    }
+    body.auth-locked .memberBottomNav { display: none; }
+    body.auth-ok { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+    .memberBottomNavItem {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      border: 0;
+      border-radius: 10px;
+      padding: 5px 2px;
+      background: transparent;
+      color: var(--text-muted);
+      font: inherit;
+      font-size: .66rem;
+      font-weight: 700;
+      line-height: 1.12;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color .2s ease, background .2s ease;
+    }
+    .memberBottomNavItem svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; transition:transform .2s ease; }
+    .memberBottomNavItem svg.dietAppleIcon { fill: currentColor; stroke: none; }
+    .memberBottomNavItem.active { color: var(--brand-green); background: transparent; }
+    .memberBottomNavItem.active svg { transform:scale(1.16); }
+    #bottomMembersBtn { order:1; }
+    #bottomDietBtn { order:2; }
+    #bottomTrainingBtn { order:3; }
+
+    /* Navegação principal no topo; os itens menores aparecem no conteúdo. */
+    .memberBottomNav { display:none !important; }
+    .main-header { display:grid !important; padding:0 24px; }
+    #menuDropdown > a { display:none !important; }
+    body,
+    body.auth-ok { padding-top:70px; padding-bottom:0; }
+    @media(max-width:768px){ body,body.auth-ok{padding-top:60px}.main-header{height:60px;padding:0 14px} }
+
+  </style>
+<style id="profissional-do-futuro-brand">
+  .loginLogo { width: min(100%, 300px); height: auto; margin: 0 auto 30px; }
+  .logo-img { width: 174px; height: auto; object-fit: contain; }
+  .appSplashLogo { width: min(75vw, 360px); height: auto; }
+  @media(max-width: 600px) { .logo-img { width: 145px; height: auto; } }
+</style>
+
+<style id="member-notice-style">
+  .memberNotice { width:calc(100% - 32px); max-width:460px; padding:0; border:1px solid rgba(59,130,246,.35); border-radius:20px; background:#151d2b; color:#f8fafc; box-shadow:0 24px 90px rgba(0,0,0,.55); overflow:hidden; }
+  .memberNotice::backdrop { background:rgba(3,8,18,.76); backdrop-filter:blur(5px); }
+  .memberNoticeHeader { position:relative; display:flex; align-items:center; gap:16px; padding:26px 24px 22px; background:linear-gradient(120deg,rgba(37,99,235,.24),rgba(56,189,248,.04)); }
+  .memberNoticeIcon { flex:0 0 56px; height:56px; display:grid; place-items:center; border-radius:17px; background:linear-gradient(135deg,#2563eb,#0ea5e9); box-shadow:0 8px 24px rgba(37,99,235,.28); }
+  .memberNoticeIcon svg { width:28px; height:28px; fill:none; stroke:#fff; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .memberNoticeBadge { display:inline-block; color:#60a5fa; background:rgba(59,130,246,.12); border-radius:99px; padding:4px 9px; font-size:.62rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+  .memberNotice h2 { margin:7px 24px 0 0; font-size:1.22rem; line-height:1.25; letter-spacing:-.03em; }
+  .memberNoticeClose { position:absolute; top:16px; right:16px; width:32px; height:32px; padding:0; border:0; border-radius:50%; background:#233044; color:#a8b8cc; font-size:22px; }
+  .memberNoticeBody { padding:20px 24px 26px; }
+  .memberNoticeBody p { margin:0 0 24px; color:#a8b8cc; font-size:1rem; line-height:1.65; }
+  .memberNoticeBody strong { color:#60a5fa; }
+  .memberNoticeAction { width:100%; min-height:49px; border:0; border-radius:13px; background:linear-gradient(100deg,#2563eb,#0ea5e9); color:#fff; font:inherit; font-size:.92rem; font-weight:800; text-transform:uppercase; box-shadow:0 7px 20px rgba(37,99,235,.2); }
+  .memberNoticeAction:disabled { cursor:default; opacity:.6; }
+  .memberNoticeLater { display:block; margin:18px auto 0; padding:7px 14px; border:0; background:transparent; color:#a8b8cc; font:inherit; font-weight:600; }
+  .memberNotice button:focus-visible { outline:2px solid #7dd3fc; outline-offset:3px; }
+  body:has(.memberNotice[open]) { overflow:hidden; }
+  @media(max-width:380px) { .memberNoticeHeader { padding:24px 18px 20px; gap:12px; } .memberNoticeBody { padding:18px; } .memberNotice h2 { font-size:1.08rem; } }
+</style>
+
+
+<style id="final-offer-style">
+  .finalOffer { width:100%; max-width:520px; margin:14px auto 0; padding:28px 26px 30px; text-align:center; border:1px solid rgba(59,130,246,.45); border-radius:20px; background:radial-gradient(ellipse at top,rgba(37,99,235,.12),transparent 70%),#151d2b; box-shadow:0 14px 40px rgba(0,0,0,.16); }
+  .finalOfferIcon { display:grid; place-items:center; width:80px; height:80px; margin:0 auto 23px; border-radius:19px; background:linear-gradient(135deg,#2563eb,#0ea5e9); box-shadow:0 10px 28px rgba(37,99,235,.25); }
+  .finalOfferIcon svg { width:36px; height:36px; fill:none; stroke:#fff; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .finalOfferBadge { display:inline-block; padding:4px 12px; border:1px solid rgba(59,130,246,.4); border-radius:99px; color:#60a5fa; background:rgba(37,99,235,.12); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  .finalOffer h3 { margin:13px 0 10px; color:#fff; font-size:1.4rem; font-weight:800; letter-spacing:-.03em; }
+  .finalOffer p { margin:0 0 26px; color:#a8b8cc; font-size:.95rem; line-height:1.65; }
+  .finalOffer strong { color:#38bdf8; }
+  .finalOfferAction { max-width:100%; min-width:225px; padding:15px 24px; border:0; border-radius:15px; background:linear-gradient(100deg,#2563eb,#0ea5e9); box-shadow:0 8px 22px rgba(37,99,235,.22); color:#fff; font:inherit; font-size:.95rem; font-weight:800; text-transform:uppercase; }
+  .finalOfferAction:disabled { opacity:.6; cursor:default; }
+  .finalOfferAction:focus-visible { outline:2px solid #7dd3fc; outline-offset:4px; }
+  @media(max-width:420px) { .finalOffer { padding:25px 18px; } }
+</style>
+
+<style id="final-offer-minimal">
+  .finalOffer { max-width:520px; margin:8px auto 0; padding:24px; border:1px solid #28364a; border-radius:14px; background:#151e2c; box-shadow:none; text-align:left; }
+  .finalOfferIcon { width:40px; height:40px; margin:0 0 18px; border-radius:11px; background:rgba(59,130,246,.10); box-shadow:none; }
+  .finalOfferIcon svg { width:21px; height:21px; stroke:#60a5fa; }
+  .finalOfferBadge { padding:0; border:0; border-radius:0; background:none; color:#7e96b5; font-size:.65rem; letter-spacing:.12em; font-weight:600; }
+  .finalOffer h3 { margin:8px 0 12px; font-size:1.2rem; line-height:1.3; letter-spacing:-.025em; font-weight:700; }
+  .finalOffer p { margin:0 0 22px; font-size:.9rem; line-height:1.7; color:#a5b1c2; }
+  .finalOffer strong { color:#d8e6f8; font-weight:600; }
+  .finalOfferAction { display:block; width:100%; min-width:0; min-height:45px; padding:12px 18px; border-radius:9px; background:#2563eb; box-shadow:none; font-size:.9rem; font-weight:600; text-transform:none; }
+  .finalOfferAction:disabled { opacity:1; background:#203b69; color:#9bb6e3; }
+  @media(max-width:420px) { .finalOffer { padding:22px 20px; } }
+</style>
+<style>
+  .pwaInstallButton { position:fixed; right:18px; bottom:18px; z-index:80; display:inline-flex; align-items:center; padding:11px 16px; border:1px solid #37547d; border-radius:999px; background:#17243a; color:#dbeafe; font:inherit; font-size:.82rem; font-weight:600; box-shadow:0 4px 16px rgba(0,0,0,.18); }
+  .pwaInstallButton[hidden] { display:none; }
+  .pwaInstallButton:hover { background:#203451; }
+  .pwaInstallButton:focus-visible { outline:2px solid #60a5fa; outline-offset:3px; }
+  @media(display-mode:standalone) { .pwaInstallButton { display:none; } }
+</style>
+
+<style id="final-offer-inline">
+  .finalOffer { width:100%; max-width:none; margin:22px 0 0; padding:0; border:0; border-radius:0; background:none; box-shadow:none; }
+  .finalOfferHeading { display:flex; align-items:center; gap:13px; }
+  .finalOfferIcon { flex:0 0 38px; width:38px; height:38px; margin:0; border-radius:10px; }
+  .finalOfferBadge { font-size:.6rem; letter-spacing:.1em; }
+  .finalOffer h3 { margin:4px 0 0; font-size:1.1rem; }
+  .finalOffer p { margin:16px 0 20px; font-size:.92rem; line-height:1.7; }
+  .finalOfferAction { width:100%; max-width:420px; }
+  @media(max-width:420px) { .finalOffer { padding:0; } }
+</style>
+
+</head>
+
+
+<body class="auth-locked appIntroLoading">
+
+  <div class="appSplash" id="appSplash" aria-label="A carregar o Profissional do Futuro">
+    <img class="appSplashLogo" src="assets/app/profissional-do-futuro-logo-final.png" alt="Profissional do Futuro">
+  </div>
+  <script>setTimeout(()=>{document.getElementById('appSplash')?.remove();document.body.classList.remove('appIntroLoading');document.body.classList.add('appIntroReady');setTimeout(()=>document.body.classList.remove('appIntroReady'),700)},2000);</script>
+
+  <section class="loginScreen" id="loginScreen">
+    <form class="loginCard" id="loginForm">
+      <img src="assets/app/profissional-do-futuro-logo-final.png" alt="Profissional do Futuro" class="loginLogo">
+
+        <div class="loginField">
+        <label for="loginEmail">Email da compra</label>
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="seuemail@gmail.com" required>
+      </div>
+<button class="loginSubmit" id="loginSubmit" type="submit">Entrar</button>
+      <div class="loginMsg" id="loginMsg"></div>
+    </form>
+  </section>
+
+
+
+
+<header class="main-header">
+  <div class="header-left">
+    <div class="headerMenu">
+      <button id="menuBtn" class="menuBtn" type="button" aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div id="menuDropdown" class="menuDropdown">
+        <button id="supportBtn" type="button" data-support-url="https://wa.me/5562984888498?text=Ol%C3%A1%2C%20sou%20aluno%20do%20P.Futuro%20preciso%20de%20ajuda.">Suporte</button>
+        <button id="groupBtn" type="button" data-group-url="https://chat.whatsapp.com/LN0HmBAZT6qH1DVMaSytac">Grupo</button>
+        <button id="logoutBtn" type="button">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <a class="headerLogoBtn" id="headerLogoBtn" href="#memberNotice" aria-label="Abrir diagnóstico comercial">
+      <img src="assets/app/profissional-do-futuro-logo-final.png" alt="Profissional do Futuro" class="logo-img">
+    </a>
+  </div>
+
+  <div class="header-right">
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema escuro/claro">
+      <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+
+      <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+
+
+  <div class="wrap">
+
+    <div>
+      <div class="playerWrapper" id="playerWrapper">
+        <div class="player">
+          <iframe
+            id="yt"
+            title="Aula"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="lessonInfo" style="margin-top: 10px;">
+        <div class="headerRow">
+          <div class="controlsRow">
+            <button class="navBtn" id="prevBtn" type="button" aria-label="Recurso anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 4L7.5 12l8 8"/></svg></button>
+            <div class="starsOnly" id="stars" aria-label="Avaliação do conteúdo"></div>
+            <button class="navBtn" id="nextBtn" type="button" aria-label="Próximo recurso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 4l8 8-8 8"/></svg></button>
+          </div>
+          <div class="lessonTag" id="lessonTag">Profissional do Futuro</div>
+          <h2 class="lessonTitle" id="lessonTitle">Selecione um recurso</h2>
+        </div>
+
+        <div class="descArea">
+          <p id="lessonDesc">Abra um módulo abaixo e selecione um recurso para começar.</p>
+          <div class="actionLinks" id="links"></div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="modulesContainer" id="modules"></div>
+
+  </div>
+
+  <div class="dietModalOverlay" id="trainingGenderOverlay" role="dialog" aria-modal="true" aria-labelledby="trainingGenderTitle">
+    <div class="dietModal">
+      <h3 id="trainingGenderTitle">Gostaria de um treino para?</h3>
+      <p>Escolha uma opção para abrir a pasta correta.</p>
+      <div class="dietModalChoices">
+        <button type="button" data-training-gender="homem">Homem</button>
+        <button type="button" data-training-gender="mulher">Mulher</button>
+      </div>
+      <button class="dietModalCancel" id="trainingGenderCancel" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="calorieWizardOverlay" role="dialog" aria-modal="true" aria-labelledby="wizardTitle">
+    <div class="calorieWizard">
+      <div class="wizardProgress"><div class="wizardProgressBar" id="wizardProgressBar"></div></div>
+      <div id="wizardContent"></div>
+      <div class="wizardError" id="wizardError"></div>
+      <div class="wizardNav" id="wizardNav">
+        <button class="wizardBack" id="wizardBack" type="button">Voltar</button>
+        <button class="wizardNext" id="wizardNext" type="button">Continuar</button>
+      </div>
+      <button class="wizardClose" id="wizardClose" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+
+  <div class="pdfViewerOverlay" id="pdfViewerOverlay" role="dialog" aria-modal="true" aria-label="Minha Dieta">
+    <div class="pdfViewerHeader">
+      <button class="pdfViewerClose" id="pdfViewerClose" type="button" aria-label="Fechar">×</button>
+    </div>
+    <div class="pdfViewerPages" id="pdfViewerPages" role="document" aria-label="Páginas da dieta"><div class="pdfViewerStatus">Carregando dieta…</div></div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="fatWizardOverlay" role="dialog" aria-modal="true" aria-labelledby="fatWizardTitle">
+    <div class="calorieWizard">
+      <div class="wizardProgress"><div class="wizardProgressBar" id="fatProgressBar"></div></div>
+      <div id="fatWizardContent"></div>
+      <div class="wizardError" id="fatWizardError"></div>
+      <div class="wizardNav" id="fatWizardNav">
+        <button class="wizardBack" id="fatWizardBack" type="button">Voltar</button>
+        <button class="wizardNext" id="fatWizardNext" type="button">Continuar</button>
+      </div>
+      <button class="wizardClose" id="fatWizardClose" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="profileOverlay" role="region" aria-label="Meus dados">
+    <div class="calorieWizard profileFullscreen">
+      <div class="profileBody">
+        <div class="profileTabs" role="tablist" aria-label="Dados do aluno">
+          <button class="profileTab active" id="profilePersonalTab" type="button" role="tab" aria-selected="true" data-profile-tab="personal">Dados pessoais</button>
+          <button class="profileTab" id="profileTechnicalTab" type="button" role="tab" aria-selected="false" data-profile-tab="technical">Técnico</button>
+        </div>
+        <div class="profilePane active" id="profilePersonalPane" role="tabpanel" aria-labelledby="profilePersonalTab">
+          <div class="profileGrid" id="profilePersonalGrid"></div>
+        </div>
+        <div class="profilePane" id="profileTechnicalPane" role="tabpanel" aria-labelledby="profileTechnicalTab">
+          <div class="profileGrid" id="profileTechnicalGrid"></div>
+        </div>
+        <div class="profileActions single">
+          <button class="linkBtn primary" id="profileEdit" type="button">Editar dados</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="trainingQuizOverlay" role="dialog" aria-modal="true" aria-labelledby="trainingQuizTitle">
+    <div class="calorieWizard">
+      <div class="wizardProgress"><div class="wizardProgressBar" id="trainingQuizProgress"></div></div>
+      <div id="trainingQuizContent"></div>
+      <div class="wizardError" id="trainingQuizError"></div>
+      <div class="wizardNav" id="trainingQuizNav">
+        <button class="wizardBack" id="trainingQuizBack" type="button">Voltar</button>
+        <button class="wizardNext" id="trainingQuizNext" type="button">Continuar</button>
+      </div>
+      <button class="wizardClose" id="trainingQuizClose" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="hydrationOverlay" role="dialog" aria-modal="true" aria-labelledby="hydrationTitle">
+    <div class="calorieWizard">
+      <div class="wizardProgress"><div class="wizardProgressBar" id="hydrationProgress"></div></div>
+      <div id="hydrationContent"></div>
+      <div class="wizardError" id="hydrationError"></div>
+      <div class="wizardNav" id="hydrationNav">
+        <button class="wizardBack" id="hydrationBack" type="button">Voltar</button>
+        <button class="wizardNext" id="hydrationNext" type="button">Continuar</button>
+      </div>
+      <button class="wizardClose" id="hydrationClose" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="sleepQuizOverlay" role="dialog" aria-modal="true" aria-labelledby="sleepQuizTitle">
+    <div class="calorieWizard">
+      <div class="wizardProgress"><div class="wizardProgressBar" id="sleepQuizProgress"></div></div>
+      <div id="sleepQuizContent"></div>
+      <div class="wizardError" id="sleepQuizError"></div>
+      <div class="wizardNav" id="sleepQuizNav">
+        <button class="wizardBack" id="sleepQuizBack" type="button">Voltar</button>
+        <button class="wizardNext" id="sleepQuizNext" type="button">Continuar</button>
+      </div>
+      <button class="wizardClose" id="sleepQuizClose" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+  <div class="calorieWizardOverlay" id="objectiveOverlay" role="dialog" aria-modal="true" aria-labelledby="objectiveTitle">
+    <div class="calorieWizard">
+      <div class="wizardProgress"><div class="wizardProgressBar" id="objectiveProgress"></div></div>
+      <div id="objectiveContent"></div>
+      <div class="wizardError" id="objectiveError"></div>
+      <button class="wizardClose" id="objectiveClose" type="button" aria-label="Fechar">×</button>
+    </div>
+  </div>
+
+  <div class="dietModalOverlay" id="eliteOfferOverlay" role="dialog" aria-modal="true" aria-labelledby="eliteOfferTitle">
+    <div class="dietModal">
+      <button class="dietModalCancel" id="eliteOfferClose" type="button" aria-label="Fechar">×</button>
+      <div class="wizardStepLabel">Conteúdo exclusivo</div>
+      <h3 id="eliteOfferTitle">Libere todos os módulos</h3>
+      <p>Faça upgrade para o plano elite agora mesmo com 50% de desconto.</p>
+      <a class="linkBtn primary dietPhaseBtn" id="eliteUpgradeLink" href="https://pay.hotmart.com/V107476471D?off=zkggralm&amp;checkoutMode=10" target="_blank" rel="noopener noreferrer">Quero o Plano Elite</a>
+    </div>
+  </div>
+
+  <button id="installAppBtn" class="pwaInstallButton" type="button">Instalar aplicativo</button>
+  <div class="installNudgeOverlay" id="installNudgeOverlay" role="dialog" aria-modal="true" aria-labelledby="installNudgeTitle" aria-describedby="installNudgeMessage">
+    <div class="installNudge">
+      <button class="installNudgeClose" id="installNudgeClose" type="button" aria-label="Fechar">×</button>
+      <img class="installNudgeIcon" src="assets/app/icon-192.png" alt="Ícone Profissional do Futuro">
+      <div class="installNudgeCopy">
+        <h3 id="installNudgeTitle">Instalar app</h3>
+        <p id="installNudgeMessage"></p>
+      </div>
+      <button class="installNudgeAction" id="installNudgeAction" type="button">OK</button>
+    </div>
+  </div>
+
+  <nav class="memberBottomNav" id="memberBottomNav" aria-label="Navegação principal">
+    <button class="memberBottomNavItem" id="bottomDietBtn" type="button" data-bottom-section="diet">
+      <svg class="dietAppleIcon" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 60C60 25 10 60 25 115c10 50 50 70 75 55 25 15 65-5 75-55 15-55-35-90-75-55Z"/><path d="M100 65q10-25 28-41l-10-7Q98 35 94 62Z"/><path d="M85 45Q50 45 50 15q35 0 35 30Z"/></svg>
+      <span>Dieta</span>
+    </button>
+    <button class="memberBottomNavItem" id="bottomTrainingBtn" type="button" data-bottom-section="training">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>
+      <span>Treino</span>
+    </button>
+    <button class="memberBottomNavItem active" id="bottomMembersBtn" type="button" data-bottom-section="members" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 5.5v16M8 7h8M8 11h8"/></svg>
+      <span>Conteúdo</span>
+    </button>
+  </nav>
+
+  <div class="dietModalOverlay" id="languageOverlay" role="dialog" aria-modal="true" aria-labelledby="languageTitle">
+    <div class="dietModal">
+      <button class="dietModalCancel" id="languageClose" type="button" aria-label="Fechar">×</button>
+      <div class="wizardStepLabel">Idioma</div>
+      <h3 id="languageTitle">Escolha o idioma</h3>
+      <p>O idioma de Portugal é selecionado automaticamente quando identificado pelo navegador.</p>
+      <div class="objectiveGenderChoices">
+        <button type="button" data-locale-choice="pt-BR">Português (Brasil)</button>
+        <button type="button" data-locale-choice="pt-PT">Português (Portugal)</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const THEME_KEY = 'start_theme_preference';
+      const toggleBtn = document.getElementById('theme-toggle');
+      const htmlEl = document.documentElement;
+
+      // 1. Função para aplicar o tema
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          htmlEl.setAttribute('data-theme', 'light');
+        } else {
+          htmlEl.removeAttribute('data-theme'); // Remove para voltar ao padrão (dark)
+        }
+      }
+
+      // 2. Tema automático pelo horário local: claro das 6h às 18h.
+      function automaticTheme() {
+        const hour = new Date().getHours();
+        const theme = hour >= 6 && hour < 18 ? 'light' : 'dark';
+        applyTheme(theme);
+        localStorage.setItem(THEME_KEY, theme);
+      }
+
+      function scheduleAutomaticThemeChange() {
+        const now = new Date();
+        const next = new Date(now);
+        if (now.getHours() < 6) next.setHours(6, 0, 0, 0);
+        else if (now.getHours() < 18) next.setHours(18, 0, 0, 0);
+        else { next.setDate(next.getDate() + 1); next.setHours(6, 0, 0, 0); }
+        window.setTimeout(() => { automaticTheme(); scheduleAutomaticThemeChange(); }, Math.max(1000, next.getTime() - now.getTime()));
+      }
+
+      automaticTheme();
+      scheduleAutomaticThemeChange();
+
+      // 3. Evento de Clique para alternar
+      toggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+        applyTheme(newTheme);
+        localStorage.setItem(THEME_KEY, newTheme);
+      });
+    })();
+  </script>
+
+  <script>
+    /* ===================== AREA TRACKING (COMPLETO) ===================== */
+    const TRACK_URL = "https://script.google.com/macros/s/AKfycbwNqgKlbIqxO_DT-_m-9DZsHnZKKsYQOQJ3qwHHDC_oIsmMAf4f5ekUTU5UgdrslWlZbQ/exec";
+    const AREA_KEY  = "area_member_tracking_v1";
+
+    let CURRENT_UTMS = null;
+
+    function uuid_(){
+      return (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : ("sid_" + Math.random().toString(16).slice(2) + Date.now());
+    }
+
+    function getUTMsFromUrl_(){
+      const p = new URLSearchParams(location.search);
+      const utms = {
+        utm_source:   p.get("utm_source")   || "",
+        utm_medium:   p.get("utm_medium")   || "",
+        utm_campaign: p.get("utm_campaign") || "",
+        utm_content:  p.get("utm_content")  || "",
+        utm_term:     p.get("utm_term")     || ""
+      };
+      const hasAny = Object.values(utms).some(v => (v || "").trim().length);
+      return hasAny ? utms : null;
+    }
+
+    function loadAreaState_(){
+      try{
+        const raw = localStorage.getItem(AREA_KEY);
+        return raw ? JSON.parse(raw) : null;
+      }catch(e){ return null; }
+    }
+
+    function saveAreaState_(obj){
+      try{ localStorage.setItem(AREA_KEY, JSON.stringify(obj)); }catch(e){}
+    }
+
+    function detectDeviceType_(){
+      return (Math.min(window.innerWidth, window.screen.width) <= 768) ? "mobile" : "desktop";
+    }
+
+    function detectOS_(){
+      const ua = navigator.userAgent || "";
+      if(/Android/i.test(ua)) return "Android";
+      if(/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+      if(/Windows/i.test(ua)) return "Windows";
+      if(/Mac OS X/i.test(ua)) return "macOS";
+      if(/Linux/i.test(ua)) return "Linux";
+      return "Other";
+    }
+
+    function appendUtmToUrl_(url, utms){
+      if(!url || !utms) return url;
+      const raw = String(url).trim();
+      if(raw.startsWith("#")) return url;
+      if(raw.startsWith("tel:") || raw.startsWith("mailto:")) return url;
+
+      try{
+        const u = new URL(raw, location.origin);
+        for(const [k,v] of Object.entries(utms)){
+          if(v && !u.searchParams.get(k)) u.searchParams.set(k, v);
+        }
+        return u.toString();
+      }catch(e){
+        const hasQ = raw.includes("?");
+        const parts = [];
+        for(const [k,v] of Object.entries(utms)) if(v) parts.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+        if(!parts.length) return url;
+        return raw + (hasQ ? "&" : "?") + parts.join("&");
+      }
+    }
+
+    function sendArea_(payload){
+      const body = JSON.stringify(payload);
+      try{
+        if(navigator.sendBeacon){
+          const blob = new Blob([body], { type:"text/plain;charset=utf-8" });
+          navigator.sendBeacon(TRACK_URL, blob);
+          return;
+        }
+      }catch(e){}
+      fetch(TRACK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body
+      }).catch(()=>{});
+    }
+
+    function applyUtmsToAnchors_(utms){
+      if(!utms) return;
+      document.querySelectorAll("a[href]").forEach(a => {
+        const href = a.getAttribute("href");
+        if(!href || href.startsWith("#")) return;
+        a.href = appendUtmToUrl_(href, utms);
+      });
+    }
+
+    (function initAreaTracking(){
+      const prev = loadAreaState_() || {};
+      const session_id    = prev.session_id || uuid_();
+      const first_seen_ms = prev.first_seen_ms || Date.now();
+      const utmFromUrl = getUTMsFromUrl_();
+      const utms = utmFromUrl || prev.utms || null;
+      CURRENT_UTMS = utms;
+
+      saveAreaState_({ session_id, first_seen_ms, utms });
+      applyUtmsToAnchors_(utms);
+
+      function payloadBase_(){
+        const elapsed_sec = Math.floor((Date.now() - first_seen_ms) / 1000);
+        return {
+          action: "area",
+          session_id,
+          first_seen_br: "",
+          elapsed_sec,
+          page_url: location.href,
+          referrer: document.referrer || "",
+          utm_source:   utms?.utm_source   || "",
+          utm_medium:   utms?.utm_medium   || "",
+          utm_campaign: utms?.utm_campaign || "",
+          utm_content:  utms?.utm_content  || "",
+          utm_term:     utms?.utm_term     || "",
+          device_type: detectDeviceType_(),
+          os: detectOS_(),
+          ip: "",
+          user_agent: navigator.userAgent || ""
+        };
+      }
+
+
+
+
+    })();
+
+    function makeLinkBtn(label, url, primary){
+      const st = loadAreaState_() || {};
+      const utms = CURRENT_UTMS || st.utms || null;
+      const a = document.createElement("a");
+      a.className = "linkBtn" + (primary ? " primary" : "");
+      a.href = appendUtmToUrl_(url, utms);
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = label;
+      return a;
+    }
+  </script>
+
+  <script>
+    const COURSE_KEY = "profissional_do_futuro_recursos_v1";
+
+    const modulesData = [
+  {
+    "id": "pf-welcome",
+    "title": "Boas-vindas",
+    "lessons": [
+      {
+        "id": "pf-welcome",
+        "title": "Boas-vindas ao Profissional do Futuro",
+        "video": null,
+        "desc": "Seja bem-vindo ao Profissional do Futuro! Aqui você encontra ferramentas e materiais para aprimorar o atendimento, acompanhar clientes, prospectar e organizar as finanças do seu negócio. Explore os módulos no seu ritmo e coloque o aprendizado em prática.",
+        "links": []
+      },
+      {
+        "id": "pf-networking",
+        "title": "Entre no nosso grupo de networking",
+        "video": null,
+        "networking": true,
+        "desc": "Conecte-se com outros profissionais que também buscam aumentar seu faturamento e fazer o negócio crescer. No nosso grupo de networking, você pode trocar informações, compartilhar experiências, tirar dúvidas e conhecer novas ideias para aplicar na sua rotina. Participe dessa troca e cresça junto com a comunidade Profissional do Futuro!",
+        "links": []
+      }
+    ]
+  },
+  {
+    "id": "pf-m1",
+    "title": "IA para atendimento",
+    "lessons": [
+      {
+        "id": "pf-1",
+        "title": "Agente de IA para Atendimento",
+        "video": null,
+        "desc": "Use este agente de IA como apoio para elaborar respostas aos clientes, esclarecer dúvidas e tornar o atendimento da secretária mais ágil e organizado.",
+        "links": [
+          {
+            "label": "Acessar agente de IA",
+            "url": "https://chatgpt.com/g/g-6aca5ab3d5f48191a819eb6ec6369c7b-secretaria-que-vende",
+            "primary": true
+          }
+        ]
+      },
+      {
+        "id": "pf-5",
+        "title": "Prospecção no Instagram e WhatsApp",
+        "video": null,
+        "desc": "Acesse o material de prospecção para orientar a abordagem de novos contatos no Instagram e no WhatsApp e apoiar a criação de oportunidades de atendimento.",
+        "links": [
+          {
+            "label": "Abrir material de prospecção",
+            "url": "https://drive.google.com/file/d/1kNOGEFWa6oYUGuaYzt-WkloO2DZ63WFi/view?usp=sharing",
+            "primary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pf-m2",
+    "title": "Ferramenta de CRM WhatsApp",
+    "lessons": [
+      {
+        "id": "pf-2",
+        "title": "Ferramenta de CRM WhatsApp",
+        "video": null,
+        "desc": "Conheça o Zapflow, uma ferramenta de CRM para apoiar a organização do atendimento e o acompanhamento de clientes no WhatsApp. Acesse o repositório do projeto para consultar os arquivos e as orientações disponíveis.",
+        "links": [
+          {
+            "label": "Ver projeto Zapflow no GitHub",
+            "url": "https://github.com/douglasleao112/Zapflow.git",
+            "primary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pf-m3",
+    "title": "Followup de secretária",
+    "lessons": [
+      {
+        "id": "pf-3",
+        "title": "Followup de secretária",
+        "video": null,
+        "desc": "Consulte o material de followup para apoiar a secretária na retomada de conversas e no acompanhamento de clientes que ainda não deram continuidade ao atendimento.",
+        "links": [
+          {
+            "label": "Abrir material de followup",
+            "url": "https://drive.google.com/file/d/1vSnvX39U8X5oEtEvukGI5ZvqJTqj1bOD/view?usp=sharing",
+            "primary": true
+          }
+        ]
+      },
+      {
+        "id": "pf-4",
+        "title": "Agente GPT - Followup",
+        "video": null,
+        "desc": "Conte com um agente GPT para ajudar a preparar mensagens de followup, retomar contatos e dar continuidade às conversas com os clientes.",
+        "links": [
+          {
+            "label": "Acessar agente GPT de followup",
+            "url": "https://chatgpt.com/g/g-6aca667bc8a48191a717c357aff5bf43-follow-up",
+            "primary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pf-m6",
+    "title": "Dashboard controle financeiro",
+    "lessons": [
+      {
+        "id": "pf-6",
+        "title": "Dashboard controle financeiro",
+        "video": null,
+        "desc": "Acesse o dashboard de controle financeiro para apoiar a organização das finanças e acompanhar as informações do seu negócio em um só lugar.",
+        "links": [
+          {
+            "label": "Acessar dashboard financeiro",
+            "url": "https://consult-financ.netlify.app/",
+            "primary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pf-finish",
+    "title": "Parabéns!",
+    "lessons": [
+      {
+        "id": "pf-finish",
+        "title": "Parabéns!",
+        "video": null,
+        "congratulations": true,
+        "desc": "Parabéns por chegar até aqui! Agora é hora de colocar as ferramentas em prática e dar o próximo passo no seu negócio.",
+        "links": []
+      }
+    ]
+  }
+];
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(COURSE_KEY);
+        if(!raw) return { rating:{}, lastLessonId:null, openModuleId:null };
+        const p = JSON.parse(raw);
+        return { rating: p.rating||{}, lastLessonId: p.lastLessonId||null, openModuleId: p.openModuleId === "pf-m4" ? "pf-m3" : (p.openModuleId === "pf-m5" ? "pf-m1" : (p.openModuleId||null)) };
+      }catch(e){
+        return { rating:{}, lastLessonId:null, openModuleId:null };
+      }
+    }
+    function saveState(){ localStorage.setItem(COURSE_KEY, JSON.stringify(state)); }
+    const state = loadState();
+
+    const flat = [];
+    modulesData.forEach(m => m.lessons.forEach(l => flat.push({ ...l, moduleId:m.id, moduleTitle:m.title })));
+    const getLessonIndexById = (id) => flat.findIndex(x => x.id === id);
+
+    function getYouTubeId(url){
+      if(!url) return null;
+      try{
+        const u = new URL(url);
+        if(u.hostname.includes("youtu.be")) return (u.pathname||"").replace("/","").trim() || null;
+        if(u.searchParams.get("v")) return u.searchParams.get("v");
+        const parts = u.pathname.split("/").filter(Boolean);
+        const idx = parts.indexOf("embed");
+        if(idx>=0 && parts[idx+1]) return parts[idx+1];
+        return null;
+      }catch(e){
+        const m = String(url).match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+        return m ? m[1] : null;
+      }
+    }
+
+    function buildEmbedUrl(videoUrl){
+      const id = getYouTubeId(videoUrl);
+      if(!id) return null;
+      const params = new URLSearchParams({ rel:"0", modestbranding:"1", playsinline:"1", origin: window.location.origin });
+      return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+    }
+
+    const modulesEl = document.getElementById("modules");
+    const yt = document.getElementById("yt");
+    const lessonTitleEl = document.getElementById("lessonTitle");
+    const lessonTagEl = document.getElementById("lessonTag");
+    const lessonDescEl = document.getElementById("lessonDesc");
+    const linksEl = document.getElementById("links");
+    const starsEl = document.getElementById("stars");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let current = null;
+    let moduleMenuCollapsed = false;
+
+    function cleanDisplayTitle(value){
+      return String(value || "").replace(/^\s*\d+(?:\.\d+)*\.?\s*/, "");
+    }
+
+
+    function renderStars(value){
+      starsEl.innerHTML = "";
+      for(let i=1;i<=5;i++){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "starBtn" + (i<=value ? " on" : "");
+        b.textContent = "★";
+        b.addEventListener("click", () => {
+          if(!current) return;
+          state.rating[current.id] = i;
+          state.lastLessonId = current.id;
+          saveState();
+          updatePlayerUI();
+          paintActiveLesson();
+        });
+        starsEl.appendChild(b);
+      }
+    }
+
+    const DIET_PROGRESS_KEY = "start_selected_diet_v2";
+    const DIET_RANGES = Array.from({ length:17 }, (_, index) => {
+      const min = 800 + (index * 200);
+      const max = min + 200;
+      return { min, max, url:`assets/dietas/dieta-${min}-${max}.pdf` };
+    });
+
+    function loadDietProgress(){
+      try{
+        const data = JSON.parse(localStorage.getItem(DIET_PROGRESS_KEY) || "null");
+        if(!data || !Number(data.targetCalories)) return null;
+        const boundedCalories = Math.min(4200, Math.max(800, Number(data.targetCalories)));
+        const rangeIndex = Math.min(DIET_RANGES.length - 1, Math.floor((boundedCalories - 800) / 200));
+        const expectedUrl = DIET_RANGES[rangeIndex].url;
+        if(data.url !== expectedUrl){
+          data.url = expectedUrl;
+          localStorage.setItem(DIET_PROGRESS_KEY, JSON.stringify(data));
+        }
+        return data;
+      }catch(e){ return null; }
+    }
+
+    let pdfViewerRenderToken = 0;
+    let pdfJsModulePromise = null;
+
+    function loadPdfJs(){
+      if(!pdfJsModulePromise){
+        pdfJsModulePromise = import("./assets/pdfjs/pdf.mjs").then(pdfjs => {
+          pdfjs.GlobalWorkerOptions.workerSrc = new URL("assets/pdfjs/pdf.worker.mjs", document.baseURI).href;
+          return pdfjs;
+        });
+      }
+      return pdfJsModulePromise;
+    }
+
+    async function renderDietPdf(pdfUrl, token){
+      const pages = document.getElementById("pdfViewerPages");
+      try{
+        const pdfjs = await loadPdfJs();
+        if(token !== pdfViewerRenderToken) return;
+        const pdf = await pdfjs.getDocument({ url:pdfUrl }).promise;
+        if(token !== pdfViewerRenderToken) return;
+        pages.innerHTML = "";
+        for(let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1){
+          if(token !== pdfViewerRenderToken) return;
+          const page = await pdf.getPage(pageNumber);
+          const baseViewport = page.getViewport({ scale:1 });
+          const availableWidth = Math.max(260, Math.min(900, pages.clientWidth - 16));
+          const cssScale = availableWidth / baseViewport.width;
+          const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+          const viewport = page.getViewport({ scale:cssScale * outputScale });
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+          canvas.style.width = `${Math.floor(viewport.width / outputScale)}px`;
+          canvas.style.height = `${Math.floor(viewport.height / outputScale)}px`;
+          canvas.setAttribute("aria-label", `Página ${pageNumber} de ${pdf.numPages}`);
+          pages.appendChild(canvas);
+          await page.render({ canvasContext:canvas.getContext("2d"), viewport }).promise;
+        }
+      }catch(error){
+        if(token !== pdfViewerRenderToken) return;
+        pages.innerHTML = '<div class="pdfViewerStatus error">Não foi possível carregar esta dieta. Feche e tente novamente.</div>';
+        console.error("Falha ao renderizar dieta", error);
+      }
+    }
+
+    function openDietUrl(url){
+      const cleanUrl = String(url || "").replace(/^\.\//, "");
+      const pdfUrl = new URL(cleanUrl, document.baseURI).href;
+      setMemberBottomNavActive("diet");
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function closeDietViewer(){
+      pdfViewerRenderToken += 1;
+      document.getElementById("pdfViewerOverlay").classList.remove("open");
+      document.getElementById("pdfViewerPages").innerHTML = '<div class="pdfViewerStatus">Carregando dieta…</div>';
+      document.body.classList.remove("pdfViewerOpen");
+    }
+
+    document.getElementById("pdfViewerClose").addEventListener("click", closeDietViewer);
+    document.addEventListener("keydown", event => {
+      if(event.key === "Escape" && document.getElementById("pdfViewerOverlay").classList.contains("open")) closeDietViewer();
+    });
+
+    function renderDietActions(){
+      const box = document.createElement("div");
+      box.className = "dietActions";
+      const progress = loadDietProgress();
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "linkBtn primary dietPhaseBtn";
+      if(progress){
+        button.textContent = "Acessar Dieta";
+        button.addEventListener("click", () => openDietUrl(progress.url));
+      }else{
+        button.textContent = "Acessar Dieta";
+        button.addEventListener("click", openDietQuiz);
+      }
+      box.appendChild(button);
+      return box;
+    }
+
+    const CALORIE_PROFILE_KEY = "start_calorie_profile_v1";
+    const calorieSteps = [
+      { key:"height", title:"Qual é a sua altura?", hint:"Informe sua altura em centímetros.", min:120, max:230, placeholder:"Ex.: 175", suffix:"cm" },
+      { key:"weight", title:"Qual é o seu peso?", hint:"Informe seu peso atual em quilogramas.", min:35, max:250, step:"0.1", placeholder:"Ex.: 78,5", suffix:"kg" },
+      { key:"age", title:"Qual é a sua idade?", hint:"Informe sua idade em anos.", min:14, max:90, placeholder:"Ex.: 32", suffix:"anos" },
+      { key:"gender", title:"Qual é o seu gênero?", hint:"Essa informação é usada na fórmula de gasto energético.", choices:[
+        { value:"homem", label:"Homem" }, { value:"mulher", label:"Mulher" }
+      ]},
+      { key:"activity", title:"Qual é o seu nível de atividade?", hint:"Considere sua rotina completa, incluindo os treinos.", choices:[
+        { value:"1.2", label:"Sedentário — pouco ou nenhum exercício" },
+        { value:"1.375", label:"Leve — exercícios de 1 a 3 dias por semana" },
+        { value:"1.55", label:"Moderado — exercícios de 3 a 5 dias por semana" },
+        { value:"1.725", label:"Intenso — exercícios de 6 a 7 dias por semana" },
+        { value:"1.9", label:"Muito intenso — treino pesado e rotina ativa" }
+      ]},
+      { key:"goal", title:"Qual é o seu principal objetivo?", hint:"A estimativa final será ajustada ao seu objetivo.", choices:[
+        { value:"emagrecimento", label:"Emagrecimento" },
+        { value:"definicao", label:"Definição" },
+        { value:"hipertrofia", label:"Hipertrofia" }
+      ]}
+    ];
+
+    let calorieStepIndex = 0;
+    let calorieAnswers = {};
+    let calorieActiveSteps = calorieSteps;
+    let calorieWizardMode = "calculator";
+
+    function loadCalorieProfile(){
+      try{ return JSON.parse(localStorage.getItem(CALORIE_PROFILE_KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+
+    function openCalorieWizard(){
+      calorieAnswers = loadCalorieProfile();
+      calorieActiveSteps = calorieSteps;
+      calorieWizardMode = "calculator";
+      calorieStepIndex = 0;
+      document.getElementById("calorieWizardOverlay").classList.add("open");
+      document.getElementById("wizardNav").style.display = "flex";
+      renderCalorieStep();
+    }
+
+    function hasValidCalorieAnswer(step, value){
+      if(step.choices) return step.choices.some(choice => choice.value === String(value));
+      const number = Number(value);
+      return Number.isFinite(number) && number >= step.min && number <= step.max;
+    }
+
+    function openDietQuiz(){
+      const selectedDiet = loadDietProgress();
+      if(selectedDiet){ openDietUrl(selectedDiet.url); return; }
+      calorieAnswers = loadCalorieProfile();
+      calorieWizardMode = "diet";
+      calorieActiveSteps = calorieSteps.filter(step => !hasValidCalorieAnswer(step, calorieAnswers[step.key]));
+      calorieStepIndex = 0;
+      document.getElementById("calorieWizardOverlay").classList.add("open");
+      if(!calorieActiveSteps.length){
+        showCalorieResult();
+        return;
+      }
+      document.getElementById("wizardNav").style.display = "flex";
+      renderCalorieStep();
+    }
+
+    function renderCalorieStep(){
+      const step = calorieActiveSteps[calorieStepIndex];
+      const content = document.getElementById("wizardContent");
+      document.getElementById("wizardError").textContent = "";
+      document.getElementById("wizardProgressBar").style.width = `${((calorieStepIndex + 1) / calorieActiveSteps.length) * 100}%`;
+      let field = "";
+      if(step.choices){
+        field = `<div class="wizardChoices">${step.choices.map(choice => `<button type="button" class="wizardChoice${String(calorieAnswers[step.key]) === choice.value ? " selected" : ""}" data-value="${choice.value}">${choice.label}</button>`).join("")}</div>`;
+      }else{
+        field = `<div class="wizardField"><input id="wizardInput" type="number" inputmode="decimal" min="${step.min}" max="${step.max}" step="${step.step || 1}" placeholder="${step.placeholder}" value="${calorieAnswers[step.key] || ""}" aria-label="${step.title}"></div>`;
+      }
+      content.innerHTML = `<div class="wizardStepLabel">Etapa ${calorieStepIndex + 1} de ${calorieActiveSteps.length}</div><h3 id="wizardTitle">${step.title}</h3><p class="wizardHint">${step.hint}</p>${field}`;
+      document.getElementById("wizardBack").style.visibility = calorieStepIndex === 0 ? "hidden" : "visible";
+      document.getElementById("wizardNext").textContent = calorieStepIndex === calorieActiveSteps.length - 1 ? "Calcular resultado" : "Continuar";
+      content.querySelectorAll(".wizardChoice").forEach(choice => {
+        choice.addEventListener("click", () => {
+          calorieAnswers[step.key] = choice.dataset.value;
+          content.querySelectorAll(".wizardChoice").forEach(item => item.classList.remove("selected"));
+          choice.classList.add("selected");
+        });
+      });
+      const input = document.getElementById("wizardInput");
+      if(input) setTimeout(() => input.focus(), 50);
+    }
+
+    function saveCurrentCalorieStep(){
+      const step = calorieActiveSteps[calorieStepIndex];
+      if(step.choices) return !!calorieAnswers[step.key];
+      const input = document.getElementById("wizardInput");
+      const value = Number(String(input.value).replace(",", "."));
+      if(!value || value < step.min || value > step.max) return false;
+      calorieAnswers[step.key] = value;
+      return true;
+    }
+
+    function showCalorieResult(){
+      const basal = (10 * Number(calorieAnswers.weight)) + (6.25 * Number(calorieAnswers.height)) - (5 * Number(calorieAnswers.age)) + (calorieAnswers.gender === "homem" ? 5 : -161);
+      const maintenance = basal * Number(calorieAnswers.activity);
+      const adjustment = calorieAnswers.goal === "emagrecimento" ? -1000 : calorieAnswers.goal === "definicao" ? -500 : 300;
+      const target = Math.round(maintenance + adjustment);
+      calorieAnswers.calories = target;
+      calorieAnswers.updatedAt = Date.now();
+      localStorage.setItem(CALORIE_PROFILE_KEY, JSON.stringify(calorieAnswers));
+      const trainingProgress = loadTrainingProgress();
+      if(trainingProgress){
+        trainingProgress.gender = calorieAnswers.gender;
+        localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(trainingProgress));
+      }
+      const fatProfile = loadFatProfile();
+      if(Object.keys(fatProfile).length){
+        fatProfile.gender = calorieAnswers.gender;
+        localStorage.setItem(BODY_FAT_PROFILE_KEY, JSON.stringify(fatProfile));
+      }
+      document.getElementById("wizardProgressBar").style.width = "100%";
+      document.getElementById("wizardNav").style.display = "none";
+      document.getElementById("wizardError").textContent = "";
+      if(calorieWizardMode === "diet"){
+        const boundedCalories = Math.min(4200, Math.max(800, target));
+        const rangeIndex = Math.min(DIET_RANGES.length - 1, Math.floor((boundedCalories - 800) / 200));
+        const selectedRange = DIET_RANGES[rangeIndex];
+        const selectedDiet = {
+          url:selectedRange.url,
+          rangeLabel:`${selectedRange.min}–${selectedRange.max} kcal`,
+          targetCalories:target,
+          gender:calorieAnswers.gender,
+          goal:calorieAnswers.goal,
+          selectedAt:Date.now()
+        };
+        localStorage.setItem(DIET_PROGRESS_KEY, JSON.stringify(selectedDiet));
+        document.getElementById("wizardContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Sua dieta está pronta</div><h3 id="wizardTitle">Sua meta diária de calorias</h3><div class="calorieResultValue">${target.toLocaleString("pt-BR")} kcal</div><div class="calorieResultNote">Você está recebendo uma dieta conforme seus objetivos e calorias, e ficará salva neste dispositivo.</div><button type="button" class="linkBtn primary dietPhaseBtn" id="openSelectedDiet">Acessar Dieta</button></div>`;
+        document.getElementById("openSelectedDiet").addEventListener("click", () => openDietUrl(selectedDiet.url));
+        if(current && current.dietPlan) renderLinks(current);
+      }else{
+        document.getElementById("wizardContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Resultado estimado</div><h3 id="wizardTitle">Sua meta diária de calorias</h3><div class="calorieResultValue">${target.toLocaleString("pt-BR")}</div><div class="calorieResultUnit">calorias por dia</div><div class="calorieResultNote">Este valor é uma estimativa inicial baseada nos dados informados. Acompanhe sua evolução e faça ajustes quando necessário.</div><button type="button" class="linkBtn primary dietPhaseBtn" id="wizardRedo">Refazer cálculo</button></div>`;
+        document.getElementById("wizardRedo").addEventListener("click", () => {
+          calorieStepIndex = 0;
+          calorieActiveSteps = calorieSteps;
+          document.getElementById("wizardNav").style.display = "flex";
+          renderCalorieStep();
+        });
+      }
+    }
+
+    document.getElementById("wizardNext").addEventListener("click", () => {
+      if(!saveCurrentCalorieStep()){
+        document.getElementById("wizardError").textContent = "Preencha esta etapa para continuar.";
+        return;
+      }
+      if(calorieStepIndex === calorieActiveSteps.length - 1) showCalorieResult();
+      else { calorieStepIndex += 1; renderCalorieStep(); }
+    });
+    document.getElementById("wizardBack").addEventListener("click", () => {
+      if(calorieStepIndex > 0){ calorieStepIndex -= 1; renderCalorieStep(); }
+    });
+    document.getElementById("wizardClose").addEventListener("click", () => document.getElementById("calorieWizardOverlay").classList.remove("open"));
+    document.getElementById("calorieWizardOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    const BODY_FAT_PROFILE_KEY = "start_body_fat_profile_v1";
+    let fatStepIndex = 0;
+    let fatAnswers = {};
+
+    function getFatSteps(){
+      const steps = [
+        { key:"gender", title:"Qual é o seu gênero?", hint:"O método da Marinha utiliza cálculos diferentes para homens e mulheres.", choices:[
+          { value:"homem", label:"Homem" }, { value:"mulher", label:"Mulher" }
+        ]},
+        { key:"height", title:"Qual é a sua altura?", hint:"Informe sua altura em centímetros, sem calçados.", min:120, max:230, placeholder:"Ex.: 175", suffix:"cm" },
+        { key:"waist", title:"Qual é a circunferência da cintura?", hint:"Meça com a fita nivelada, sem apertar. Para homens, na altura do umbigo; para mulheres, na parte mais estreita.", min:40, max:200, step:"0.1", placeholder:"Ex.: 86", suffix:"cm" },
+        { key:"neck", title:"Qual é a circunferência do pescoço?", hint:"Meça logo abaixo do pomo de Adão, mantendo a fita nivelada e sem apertar.", min:20, max:70, step:"0.1", placeholder:"Ex.: 39", suffix:"cm" }
+      ];
+      if(fatAnswers.gender === "mulher") steps.push({ key:"hip", title:"Qual é a circunferência do quadril?", hint:"Meça a região mais larga dos glúteos, com a fita nivelada e sem apertar.", min:50, max:220, step:"0.1", placeholder:"Ex.: 102", suffix:"cm" });
+      return steps;
+    }
+
+    function loadFatProfile(){
+      try{ return JSON.parse(localStorage.getItem(BODY_FAT_PROFILE_KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+
+    function openFatWizard(){
+      fatAnswers = loadFatProfile();
+      fatStepIndex = 0;
+      document.getElementById("fatWizardOverlay").classList.add("open");
+      document.getElementById("fatWizardNav").style.display = "flex";
+      renderFatStep();
+    }
+
+    function renderFatStep(){
+      const steps = getFatSteps();
+      if(fatStepIndex >= steps.length) fatStepIndex = steps.length - 1;
+      const step = steps[fatStepIndex];
+      const content = document.getElementById("fatWizardContent");
+      document.getElementById("fatWizardError").textContent = "";
+      document.getElementById("fatProgressBar").style.width = `${((fatStepIndex + 1) / steps.length) * 100}%`;
+      let field = "";
+      if(step.choices){
+        field = `<div class="wizardChoices">${step.choices.map(choice => `<button type="button" class="wizardChoice${String(fatAnswers[step.key]) === choice.value ? " selected" : ""}" data-value="${choice.value}">${choice.label}</button>`).join("")}</div>`;
+      }else{
+        field = `<div class="wizardField"><input id="fatWizardInput" type="number" inputmode="decimal" min="${step.min}" max="${step.max}" step="${step.step || 1}" placeholder="${step.placeholder}" value="${fatAnswers[step.key] || ""}" aria-label="${step.title}"></div>`;
+      }
+      content.innerHTML = `<div class="wizardStepLabel">Etapa ${fatStepIndex + 1} de ${steps.length}</div><h3 id="fatWizardTitle">${step.title}</h3><p class="wizardHint">${step.hint}</p>${field}`;
+      document.getElementById("fatWizardBack").style.visibility = fatStepIndex === 0 ? "hidden" : "visible";
+      document.getElementById("fatWizardNext").textContent = fatStepIndex === steps.length - 1 ? "Calcular percentual" : "Continuar";
+      content.querySelectorAll(".wizardChoice").forEach(choice => {
+        choice.addEventListener("click", () => {
+          fatAnswers[step.key] = choice.dataset.value;
+          if(step.key === "gender" && choice.dataset.value === "homem") delete fatAnswers.hip;
+          content.querySelectorAll(".wizardChoice").forEach(item => item.classList.remove("selected"));
+          choice.classList.add("selected");
+        });
+      });
+      const input = document.getElementById("fatWizardInput");
+      if(input) setTimeout(() => input.focus(), 50);
+    }
+
+    function saveCurrentFatStep(){
+      const step = getFatSteps()[fatStepIndex];
+      if(step.choices) return !!fatAnswers[step.key];
+      const value = Number(String(document.getElementById("fatWizardInput").value).replace(",", "."));
+      if(!value || value < step.min || value > step.max) return false;
+      fatAnswers[step.key] = value;
+      return true;
+    }
+
+    function getFatClassification(value, gender){
+      if(gender === "homem"){
+        if(value < 6) return "Gordura essencial";
+        if(value < 14) return "Perfil atlético";
+        if(value < 18) return "Boa forma";
+        if(value < 25) return "Faixa média";
+        return "Faixa elevada";
+      }
+      if(value < 14) return "Gordura essencial";
+      if(value < 21) return "Perfil atlético";
+      if(value < 25) return "Boa forma";
+      if(value < 32) return "Faixa média";
+      return "Faixa elevada";
+    }
+
+    function showFatResult(){
+      const h = Number(fatAnswers.height);
+      const w = Number(fatAnswers.waist);
+      const n = Number(fatAnswers.neck);
+      let density;
+      if(fatAnswers.gender === "homem"){
+        if(w <= n){ document.getElementById("fatWizardError").textContent = "A cintura precisa ser maior que o pescoço. Confira as medidas."; return; }
+        density = 1.0324 - (0.19077 * Math.log10(w - n)) + (0.15456 * Math.log10(h));
+      }else{
+        const hip = Number(fatAnswers.hip);
+        if((w + hip) <= n){ document.getElementById("fatWizardError").textContent = "Confira as medidas informadas."; return; }
+        density = 1.29579 - (0.35004 * Math.log10(w + hip - n)) + (0.22100 * Math.log10(h));
+      }
+      const percentage = Math.max(2, Math.min(60, 495 / density - 450));
+      fatAnswers.percentage = Number(percentage.toFixed(1));
+      fatAnswers.updatedAt = Date.now();
+      localStorage.setItem(BODY_FAT_PROFILE_KEY, JSON.stringify(fatAnswers));
+      const formatted = percentage.toFixed(1).replace(".", ",");
+      document.getElementById("fatProgressBar").style.width = "100%";
+      document.getElementById("fatWizardNav").style.display = "none";
+      document.getElementById("fatWizardError").textContent = "";
+      document.getElementById("fatWizardContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Método da Marinha dos Estados Unidos</div><h3 id="fatWizardTitle">Seu percentual estimado de gordura</h3><div class="calorieResultValue">${formatted}%</div><div class="calorieResultUnit">${getFatClassification(percentage, fatAnswers.gender)}</div><div class="calorieResultNote">Esta é uma estimativa baseada em medidas corporais. Para acompanhar sua evolução, refaça as medidas sempre nas mesmas condições.</div><button type="button" class="linkBtn primary dietPhaseBtn" id="fatWizardRedo">Refazer cálculo</button></div>`;
+      document.getElementById("fatWizardRedo").addEventListener("click", () => {
+        fatStepIndex = 0;
+        document.getElementById("fatWizardNav").style.display = "flex";
+        renderFatStep();
+      });
+    }
+
+    document.getElementById("fatWizardNext").addEventListener("click", () => {
+      if(!saveCurrentFatStep()){
+        document.getElementById("fatWizardError").textContent = "Preencha esta etapa para continuar.";
+        return;
+      }
+      const steps = getFatSteps();
+      if(fatStepIndex === steps.length - 1) showFatResult();
+      else { fatStepIndex += 1; renderFatStep(); }
+    });
+    document.getElementById("fatWizardBack").addEventListener("click", () => {
+      if(fatStepIndex > 0){ fatStepIndex -= 1; renderFatStep(); }
+    });
+    document.getElementById("fatWizardClose").addEventListener("click", () => document.getElementById("fatWizardOverlay").classList.remove("open"));
+    document.getElementById("fatWizardOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    const TRAINING_LEVEL_KEY = "start_training_level_v1";
+    const trainingQuestions = [
+      {
+        key:"continuous",
+        title:"Há quanto tempo você treina sem interrupções?",
+        hint:"Considere apenas o período atual de treino contínuo.",
+        choices:[
+          { value:"1", label:"Até 2 meses" },
+          { value:"2", label:"Mais de 2 meses até 1 ano" },
+          { value:"3", label:"Mais de 1 até 3 anos" },
+          { value:"4", label:"3 anos ou mais" }
+        ]
+      },
+      {
+        key:"detraining",
+        title:"Por quanto tempo você ficou sem treinar antes do período atual?",
+        hint:"Escolha a maior pausa recente antes de voltar a treinar.",
+        choices:[
+          { value:"1", label:"8 meses ou mais" },
+          { value:"2", label:"De 4 a 8 meses" },
+          { value:"3", label:"De 1 a 4 meses" },
+          { value:"4", label:"Não parei — estou treinando continuamente" }
+        ]
+      },
+      {
+        key:"previous",
+        title:"Quanto tempo de experiência você já tinha antes dessa pausa?",
+        hint:"Some sua experiência anterior com musculação. Se nunca treinou antes, escolha a primeira opção.",
+        choices:[
+          { value:"1", label:"Nenhuma experiência ou até 2 meses" },
+          { value:"2", label:"Mais de 2 meses até 1 ano" },
+          { value:"3", label:"Mais de 1 até 3 anos" },
+          { value:"4", label:"3 anos ou mais" }
+        ]
+      }
+    ];
+    let trainingQuizIndex = 0;
+    let trainingQuizAnswers = {};
+
+    function loadTrainingLevel(){
+      try{ return JSON.parse(localStorage.getItem(TRAINING_LEVEL_KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+
+    function openTrainingQuiz(){
+      const saved = loadTrainingLevel();
+      trainingQuizAnswers = saved.answers || {};
+      trainingQuizIndex = 0;
+      document.getElementById("trainingQuizOverlay").classList.add("open");
+      document.getElementById("trainingQuizNav").style.display = "flex";
+      renderTrainingQuizStep();
+    }
+
+    function renderTrainingQuizStep(){
+      const question = trainingQuestions[trainingQuizIndex];
+      const content = document.getElementById("trainingQuizContent");
+      document.getElementById("trainingQuizError").textContent = "";
+      document.getElementById("trainingQuizProgress").style.width = `${((trainingQuizIndex + 1) / trainingQuestions.length) * 100}%`;
+      content.innerHTML = `<div class="wizardStepLabel">Etapa ${trainingQuizIndex + 1} de ${trainingQuestions.length}</div><h3 id="trainingQuizTitle">${question.title}</h3><p class="wizardHint">${question.hint}</p><div class="wizardChoices">${question.choices.map(choice => `<button type="button" class="wizardChoice${String(trainingQuizAnswers[question.key]) === choice.value ? " selected" : ""}" data-value="${choice.value}">${choice.label}</button>`).join("")}</div>`;
+      document.getElementById("trainingQuizBack").style.visibility = trainingQuizIndex === 0 ? "hidden" : "visible";
+      document.getElementById("trainingQuizNext").textContent = trainingQuizIndex === trainingQuestions.length - 1 ? "Ver meu resultado" : "Continuar";
+      content.querySelectorAll(".wizardChoice").forEach(choice => {
+        choice.addEventListener("click", () => {
+          trainingQuizAnswers[question.key] = choice.dataset.value;
+          content.querySelectorAll(".wizardChoice").forEach(item => item.classList.remove("selected"));
+          choice.classList.add("selected");
+        });
+      });
+    }
+
+    function showTrainingQuizResult(){
+      const scores = trainingQuestions.map(question => Number(trainingQuizAnswers[question.key]));
+      const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+      const level = average < 2 ? "Iniciante" : average < 3 ? "Intermediário" : average < 4 ? "Avançado" : "Altamente avançado";
+      const descriptions = {
+        "Iniciante":"Construa uma base sólida, priorizando técnica, controle dos movimentos e progressão gradual.",
+        "Intermediário":"Você já possui uma base. O próximo passo é organizar melhor volume, intensidade e progressão.",
+        "Avançado":"Seu histórico permite estratégias mais exigentes, com controle cuidadoso de volume e recuperação.",
+        "Altamente avançado":"Você possui um histórico extenso e precisa de planejamento individualizado e progressões bem controladas."
+      };
+      const result = { level, score:Number(average.toFixed(2)), answers:trainingQuizAnswers, updatedAt:Date.now() };
+      localStorage.setItem(TRAINING_LEVEL_KEY, JSON.stringify(result));
+      document.getElementById("trainingQuizProgress").style.width = "100%";
+      document.getElementById("trainingQuizNav").style.display = "none";
+      document.getElementById("trainingQuizError").textContent = "";
+      document.getElementById("trainingQuizContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Seu nível atual</div><h3 id="trainingQuizTitle">Resultado do teste</h3><div class="calorieResultValue" style="font-size:2rem;">${level}</div><div class="calorieResultNote">${descriptions[level]}</div><button type="button" class="linkBtn primary dietPhaseBtn" id="trainingQuizRedo">Refazer teste</button></div>`;
+      document.getElementById("trainingQuizRedo").addEventListener("click", () => {
+        trainingQuizIndex = 0;
+        document.getElementById("trainingQuizNav").style.display = "flex";
+        renderTrainingQuizStep();
+      });
+    }
+
+    document.getElementById("trainingQuizNext").addEventListener("click", () => {
+      const question = trainingQuestions[trainingQuizIndex];
+      if(!trainingQuizAnswers[question.key]){
+        document.getElementById("trainingQuizError").textContent = "Escolha uma opção para continuar.";
+        return;
+      }
+      if(trainingQuizIndex === trainingQuestions.length - 1) showTrainingQuizResult();
+      else { trainingQuizIndex += 1; renderTrainingQuizStep(); }
+    });
+    document.getElementById("trainingQuizBack").addEventListener("click", () => {
+      if(trainingQuizIndex > 0){ trainingQuizIndex -= 1; renderTrainingQuizStep(); }
+    });
+    document.getElementById("trainingQuizClose").addEventListener("click", () => document.getElementById("trainingQuizOverlay").classList.remove("open"));
+    document.getElementById("trainingQuizOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    const OBJECTIVE_KEY = "start_body_objective_v1";
+    const OBJECTIVE_IMAGES = {
+      homem: [
+        ["10–14%", "assets/objetivo/homem-10-14.png"],
+        ["15–19%", "assets/objetivo/homem-15-19.png"],
+        ["20–24%", "assets/objetivo/homem-20-24.png"],
+        ["25–29%", "assets/objetivo/homem-30-34.png"],
+        ["30–34%", "assets/objetivo/homem-25-29.png"],
+        ["35–39%", "assets/objetivo/homem-35-39.png"]
+      ],
+      mulher: [
+        ["11–12%", "assets/objetivo/mulher-11-12.png"],
+        ["13–15%", "assets/objetivo/mulher-13-15.png"],
+        ["16–19%", "assets/objetivo/mulher-16-19.png"],
+        ["20–25%", "assets/objetivo/mulher-20-25.png"],
+        ["25–30%", "assets/objetivo/mulher-25-30.png"],
+        ["31–40%", "assets/objetivo/mulher-31-40.png"]
+      ]
+    };
+    let objectiveGender = "";
+    let objectiveIndex = 2;
+
+    function loadObjective(){
+      try{ return JSON.parse(localStorage.getItem(OBJECTIVE_KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+
+    function getSavedGender(){
+      const objective = loadObjective();
+      const calorie = loadCalorieProfile();
+      const fat = loadFatProfile();
+      const diet = loadDietProgress() || {};
+      return objective.gender || diet.gender || calorie.gender || fat.gender || "";
+    }
+
+    function renderObjectiveGender(){
+      document.getElementById("objectiveProgress").style.width = "35%";
+      document.getElementById("objectiveError").textContent = "";
+      document.getElementById("objectiveContent").innerHTML = `<div class="wizardStepLabel">Seu perfil</div><h3 id="objectiveTitle">Para quem é esta avaliação?</h3><p class="wizardHint">Selecione uma opção para mostrar as referências corretas.</p><div class="objectiveGenderChoices"><button type="button" data-objective-gender="homem">Homem</button><button type="button" data-objective-gender="mulher">Mulher</button></div>`;
+      document.querySelectorAll("[data-objective-gender]").forEach(button => button.addEventListener("click", () => {
+        objectiveGender = button.dataset.objectiveGender;
+        localStorage.setItem(CALORIE_PROFILE_KEY, JSON.stringify({ ...loadCalorieProfile(), gender:objectiveGender }));
+        renderObjectivePicker();
+      }));
+    }
+
+    function renderObjectivePicker(){
+      const options = OBJECTIVE_IMAGES[objectiveGender];
+      if(!options){ renderObjectiveGender(); return; }
+      const saved = loadObjective();
+      objectiveIndex = saved.gender === objectiveGender && Number.isInteger(saved.index) ? Math.max(0, Math.min(options.length - 1, saved.index)) : 2;
+      document.getElementById("objectiveProgress").style.width = "70%";
+      document.getElementById("objectiveError").textContent = "";
+      document.getElementById("objectiveContent").innerHTML = `<div class="wizardStepLabel">Composição corporal</div><h3 id="objectiveTitle">Qual imagem mais se parece com você agora?</h3><p class="wizardHint">Não precisa ser exato. Escolha a imagem mais próxima.</p><div class="objectivePicker"><img class="objectiveAvatar" id="objectiveAvatar" src="${options[objectiveIndex][1]}" alt="Referência corporal ${options[objectiveIndex][0]}"><div class="objectiveRangeWrap" id="objectiveRangeWrap" style="--objective-progress:${(objectiveIndex / (options.length - 1)) * 100}%"><output class="objectiveRangeLabel" id="objectiveRangeLabel">${options[objectiveIndex][0]}</output><input class="objectiveRange" id="objectiveRange" type="range" min="0" max="${options.length - 1}" step="1" value="${objectiveIndex}" aria-label="Percentual de gordura aproximado"></div><p class="objectiveDragHint">← Arraste para ajustar →</p></div><button type="button" class="linkBtn primary dietPhaseBtn" id="objectiveResultBtn">Ver meu diagnóstico</button>`;
+      const range = document.getElementById("objectiveRange");
+      range.addEventListener("input", () => {
+        objectiveIndex = Number(range.value);
+        document.getElementById("objectiveAvatar").src = options[objectiveIndex][1];
+        document.getElementById("objectiveAvatar").alt = `Referência corporal ${options[objectiveIndex][0]}`;
+        document.getElementById("objectiveRangeLabel").textContent = options[objectiveIndex][0];
+        document.getElementById("objectiveRangeWrap").style.setProperty("--objective-progress", `${(objectiveIndex / (options.length - 1)) * 100}%`);
+      });
+      document.getElementById("objectiveResultBtn").addEventListener("click", showObjectiveDiagnosis);
+    }
+
+    function showObjectiveDiagnosis(){
+      const options = OBJECTIVE_IMAGES[objectiveGender];
+      const label = options[objectiveIndex][0];
+      let title, message, goal;
+      if(objectiveIndex <= 1){
+        title = "Percentual de gordura baixo";
+        goal = "Hipertrofia";
+        message = "Seu percentual de gordura está bem baixo. Você pode optar por hipertrofia.";
+      }else if(objectiveIndex <= 3){
+        title = "Percentual de gordura normal";
+        goal = "Hipertrofia ou definição";
+        message = "Seu percentual de gordura está normal. Você pode optar por hipertrofia ou definição/emagrecimento.";
+      }else{
+        title = "Hora de reduzir o percentual";
+        goal = "Emagrecimento";
+        message = "Você precisa baixar seu percentual de gordura. Recomenda-se escolher a dieta para emagrecimento.";
+      }
+      localStorage.setItem(OBJECTIVE_KEY, JSON.stringify({ gender:objectiveGender, index:objectiveIndex, range:label, goal, updatedAt:Date.now() }));
+      document.getElementById("objectiveProgress").style.width = "100%";
+      document.getElementById("objectiveContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Seu diagnóstico</div><h3 id="objectiveTitle">${title}</h3><div class="calorieResultValue" style="font-size:2rem">${label}</div><div class="objectiveDiagnosis">${message}<br><br>Lembre-se de tirar fotos de vários ângulos para registrar o antes e depois.</div><button type="button" class="linkBtn primary dietPhaseBtn" id="objectiveRedo">Refazer avaliação</button></div>`;
+      document.getElementById("objectiveRedo").addEventListener("click", renderObjectivePicker);
+    }
+
+    function openObjectiveQuiz(){
+      objectiveGender = getSavedGender();
+      document.getElementById("objectiveOverlay").classList.add("open");
+      if(objectiveGender) renderObjectivePicker();
+      else renderObjectiveGender();
+    }
+
+    document.getElementById("objectiveClose").addEventListener("click", () => document.getElementById("objectiveOverlay").classList.remove("open"));
+    document.getElementById("objectiveOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    const HYDRATION_KEY = "start_hydration_v1";
+    const hydrationSteps = [
+      { key:"weight", title:"Qual é o seu peso?", hint:"Informe seu peso atual em quilogramas.", min:35, max:250, step:"0.1", placeholder:"Ex.: 78,5", suffix:"kg" },
+      { key:"liters", title:"Quanta água você bebe por dia?", hint:"Informe aproximadamente seu consumo diário em litros.", min:0.2, max:12, step:"0.1", placeholder:"Ex.: 2,5", suffix:"litros por dia" }
+    ];
+    let hydrationIndex = 0;
+    let hydrationAnswers = {};
+
+    function loadHydration(){
+      try{ return JSON.parse(localStorage.getItem(HYDRATION_KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+
+    function openHydrationCalculator(){
+      hydrationAnswers = loadHydration();
+      const calorie = loadCalorieProfile();
+      if(!hydrationAnswers.weight && calorie.weight) hydrationAnswers.weight = calorie.weight;
+      hydrationIndex = 0;
+      document.getElementById("hydrationOverlay").classList.add("open");
+      document.getElementById("hydrationNav").style.display = "flex";
+      renderHydrationStep();
+    }
+
+    function renderHydrationStep(){
+      const step = hydrationSteps[hydrationIndex];
+      document.getElementById("hydrationError").textContent = "";
+      document.getElementById("hydrationProgress").style.width = `${((hydrationIndex + 1) / hydrationSteps.length) * 100}%`;
+      document.getElementById("hydrationContent").innerHTML = `<div class="wizardStepLabel">Etapa ${hydrationIndex + 1} de ${hydrationSteps.length}</div><h3 id="hydrationTitle">${step.title}</h3><p class="wizardHint">${step.hint}</p><div class="wizardField"><input id="hydrationInput" type="number" inputmode="decimal" min="${step.min}" max="${step.max}" step="${step.step}" placeholder="${step.placeholder}" value="${hydrationAnswers[step.key] || ""}" aria-label="${step.title}"></div>`;
+      document.getElementById("hydrationBack").style.visibility = hydrationIndex === 0 ? "hidden" : "visible";
+      document.getElementById("hydrationNext").textContent = hydrationIndex === hydrationSteps.length - 1 ? "Ver resultado" : "Continuar";
+      setTimeout(() => document.getElementById("hydrationInput").focus(), 50);
+    }
+
+    function saveHydrationStep(){
+      const step = hydrationSteps[hydrationIndex];
+      const value = Number(String(document.getElementById("hydrationInput").value).replace(",", "."));
+      if(!value || value < step.min || value > step.max) return false;
+      hydrationAnswers[step.key] = value;
+      return true;
+    }
+
+    function showHydrationResult(){
+      const weight = Number(hydrationAnswers.weight);
+      const liters = Number(hydrationAnswers.liters);
+      const idealLiters = weight * 39 / 1000;
+      const currentMlKg = liters * 1000 / weight;
+      let status, message;
+      if(currentMlKg < 25){
+        status = "danger";
+        message = "Consumo muito baixo. Aumente aos poucos e distribua a água ao longo do dia.";
+      }else if(currentMlKg < 35){
+        status = "warning";
+        message = "Você está abaixo do ideal. Falta pouco para melhorar sua hidratação diária.";
+      }else if(currentMlKg <= 45){
+        status = "good";
+        message = "Bom consumo. Continue distribuindo a água ao longo do dia.";
+      }else if(currentMlKg <= 50){
+        status = "good";
+        message = "Seu consumo está um pouco acima da meta, mas ainda próximo do recomendado.";
+      }else{
+        status = "high";
+        message = "Consumo elevado. Mais água nem sempre é melhor; evite exageros.";
+      }
+      hydrationAnswers.idealLiters = Number(idealLiters.toFixed(2));
+      hydrationAnswers.mlPerKg = Number(currentMlKg.toFixed(1));
+      hydrationAnswers.status = status;
+      hydrationAnswers.updatedAt = Date.now();
+      localStorage.setItem(HYDRATION_KEY, JSON.stringify(hydrationAnswers));
+      document.getElementById("hydrationProgress").style.width = "100%";
+      document.getElementById("hydrationNav").style.display = "none";
+      document.getElementById("hydrationError").textContent = "";
+      document.getElementById("hydrationContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Sua meta diária</div><h3 id="hydrationTitle">Quantidade recomendada de água</h3><div class="calorieResultValue">${idealLiters.toFixed(1).replace(".", ",")} L</div><div class="hydrationAlert ${status}">${message}</div><div class="wizardHint">Consumo informado: ${liters.toFixed(1).replace(".", ",")} L (${currentMlKg.toFixed(0)} ml/kg)</div><button type="button" class="linkBtn primary dietPhaseBtn" id="hydrationRedo">Refazer cálculo</button></div>`;
+      document.getElementById("hydrationRedo").addEventListener("click", () => {
+        hydrationIndex = 0;
+        document.getElementById("hydrationNav").style.display = "flex";
+        renderHydrationStep();
+      });
+    }
+
+    document.getElementById("hydrationNext").addEventListener("click", () => {
+      if(!saveHydrationStep()){
+        document.getElementById("hydrationError").textContent = "Informe um valor válido para continuar.";
+        return;
+      }
+      if(hydrationIndex === hydrationSteps.length - 1) showHydrationResult();
+      else { hydrationIndex += 1; renderHydrationStep(); }
+    });
+    document.getElementById("hydrationBack").addEventListener("click", () => {
+      if(hydrationIndex > 0){ hydrationIndex -= 1; renderHydrationStep(); }
+    });
+    document.getElementById("hydrationClose").addEventListener("click", () => document.getElementById("hydrationOverlay").classList.remove("open"));
+    document.getElementById("hydrationOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    const SLEEP_QUIZ_KEY = "start_sleep_quiz_v1";
+    const sleepQuestions = [
+      { key:"quality", title:"Como você considera seu sono?", tip:"Crie horários regulares para dormir e acordar.", choices:[
+        { score:2, label:"Bom e reparador" }, { score:1, label:"Razoável" }, { score:0, label:"Ruim e pouco reparador" }
+      ]},
+      { key:"continuous", title:"Você dorme direto durante a noite?", tip:"Reduza líquidos e estímulos próximos do horário de dormir.", choices:[
+        { score:2, label:"Sim, durmo sem acordar" }, { score:1, label:"Acordo uma ou duas vezes" }, { score:0, label:"Acordo várias vezes" }
+      ]},
+      { key:"latency", title:"Quanto tempo demora para pegar no sono?", tip:"Desligue as telas e desacelere pelo menos 30 minutos antes de deitar.", choices:[
+        { score:2, label:"Até 15 minutos" }, { score:1, label:"Entre 15 e 30 minutos" }, { score:0, label:"Mais de 30 minutos" }
+      ]},
+      { key:"hours", title:"Quantas horas você dorme por noite?", tip:"Procure reservar de 7 a 9 horas para dormir.", choices:[
+        { score:2, label:"De 7 a 9 horas" }, { score:1, label:"De 6 a 7 horas" }, { score:0, label:"Menos de 6 ou mais de 9 horas" }
+      ]},
+      { key:"energy", title:"Você acorda disposto?", tip:"Mantenha um horário regular e observe se está dormindo horas suficientes.", choices:[
+        { score:2, label:"Sim, quase todos os dias" }, { score:1, label:"Às vezes" }, { score:0, label:"Raramente ou nunca" }
+      ]},
+      { key:"light", title:"Seu sono é leve?", tip:"Mantenha o ambiente silencioso e com temperatura confortável.", choices:[
+        { score:2, label:"Não, meu sono é profundo" }, { score:1, label:"Às vezes" }, { score:0, label:"Sim, acordo com facilidade" }
+      ]},
+      { key:"room", title:"Seu quarto é escuro e sem estímulos?", tip:"Deixe o quarto escuro, silencioso e sem telas acesas.", choices:[
+        { score:2, label:"Sim, totalmente" }, { score:1, label:"Parcialmente" }, { score:0, label:"Não, há luzes, ruídos ou telas" }
+      ]}
+    ];
+    let sleepQuizIndex = 0;
+    let sleepQuizAnswers = {};
+
+    function loadSleepQuiz(){
+      try{ return JSON.parse(localStorage.getItem(SLEEP_QUIZ_KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+
+    function openSleepQuiz(){
+      const saved = loadSleepQuiz();
+      sleepQuizAnswers = saved.answers || {};
+      sleepQuizIndex = 0;
+      document.getElementById("sleepQuizOverlay").classList.add("open");
+      document.getElementById("sleepQuizNav").style.display = "flex";
+      renderSleepQuizStep();
+    }
+
+    function renderSleepQuizStep(){
+      const question = sleepQuestions[sleepQuizIndex];
+      const content = document.getElementById("sleepQuizContent");
+      document.getElementById("sleepQuizError").textContent = "";
+      document.getElementById("sleepQuizProgress").style.width = `${((sleepQuizIndex + 1) / sleepQuestions.length) * 100}%`;
+      content.innerHTML = `<div class="wizardStepLabel">Pergunta ${sleepQuizIndex + 1} de ${sleepQuestions.length}</div><h3 id="sleepQuizTitle">${question.title}</h3><p class="wizardHint">Escolha a opção que melhor descreve sua rotina.</p><div class="wizardChoices">${question.choices.map(choice => `<button type="button" class="wizardChoice${Number(sleepQuizAnswers[question.key]) === choice.score ? " selected" : ""}" data-score="${choice.score}">${choice.label}</button>`).join("")}</div>`;
+      document.getElementById("sleepQuizBack").style.visibility = sleepQuizIndex === 0 ? "hidden" : "visible";
+      document.getElementById("sleepQuizNext").textContent = sleepQuizIndex === sleepQuestions.length - 1 ? "Ver minha nota" : "Continuar";
+      content.querySelectorAll(".wizardChoice").forEach(choice => {
+        choice.addEventListener("click", () => {
+          sleepQuizAnswers[question.key] = Number(choice.dataset.score);
+          content.querySelectorAll(".wizardChoice").forEach(item => item.classList.remove("selected"));
+          choice.classList.add("selected");
+        });
+      });
+    }
+
+    function showSleepQuizResult(){
+      const total = sleepQuestions.reduce((sum, question) => sum + Number(sleepQuizAnswers[question.key]), 0);
+      const grade = Math.round((total / (sleepQuestions.length * 2)) * 10);
+      const evaluation = grade >= 8 ? "Seu sono está bom." : grade >= 6 ? "Seu sono é razoável, mas pode melhorar." : "Seu sono precisa de atenção.";
+      const improvements = sleepQuestions
+        .filter(question => Number(sleepQuizAnswers[question.key]) < 2)
+        .sort((a, b) => Number(sleepQuizAnswers[a.key]) - Number(sleepQuizAnswers[b.key]))
+        .slice(0, 3)
+        .map(question => question.tip);
+      if(!improvements.length) improvements.push("Continue mantendo sua rotina atual de sono.");
+      const result = { grade, answers:sleepQuizAnswers, improvements, updatedAt:Date.now() };
+      localStorage.setItem(SLEEP_QUIZ_KEY, JSON.stringify(result));
+      document.getElementById("sleepQuizProgress").style.width = "100%";
+      document.getElementById("sleepQuizNav").style.display = "none";
+      document.getElementById("sleepQuizError").textContent = "";
+      document.getElementById("sleepQuizContent").innerHTML = `<div class="calorieResult"><div class="wizardStepLabel">Qualidade do sono</div><h3 id="sleepQuizTitle">Sua nota foi</h3><div class="calorieResultValue">${grade}/10</div><div class="calorieResultUnit">${evaluation}</div><div class="calorieResultNote" style="text-align:left;"><strong>O que melhorar:</strong><ul style="margin:8px 0 0;padding-left:18px;">${improvements.map(tip => `<li style="margin:5px 0;">${tip}</li>`).join("")}</ul></div><button type="button" class="linkBtn primary dietPhaseBtn" id="sleepQuizRedo">Refazer teste</button></div>`;
+      document.getElementById("sleepQuizRedo").addEventListener("click", () => {
+        sleepQuizIndex = 0;
+        document.getElementById("sleepQuizNav").style.display = "flex";
+        renderSleepQuizStep();
+      });
+    }
+
+    document.getElementById("sleepQuizNext").addEventListener("click", () => {
+      const question = sleepQuestions[sleepQuizIndex];
+      if(!Object.prototype.hasOwnProperty.call(sleepQuizAnswers, question.key)){
+        document.getElementById("sleepQuizError").textContent = "Escolha uma opção para continuar.";
+        return;
+      }
+      if(sleepQuizIndex === sleepQuestions.length - 1) showSleepQuizResult();
+      else { sleepQuizIndex += 1; renderSleepQuizStep(); }
+    });
+    document.getElementById("sleepQuizBack").addEventListener("click", () => {
+      if(sleepQuizIndex > 0){ sleepQuizIndex -= 1; renderSleepQuizStep(); }
+    });
+    document.getElementById("sleepQuizClose").addEventListener("click", () => document.getElementById("sleepQuizOverlay").classList.remove("open"));
+    document.getElementById("sleepQuizOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    function profileActivityLabel(value){
+      return ({
+        "1.2":"Sedentário",
+        "1.375":"Leve",
+        "1.55":"Moderado",
+        "1.725":"Intenso",
+        "1.9":"Muito intenso"
+      })[String(value)] || "Não informado";
+    }
+
+    function profileGoalLabel(value){
+      return ({ emagrecimento:"Emagrecimento", definicao:"Definição", hipertrofia:"Hipertrofia", perder:"Perder gordura", manter:"Manter o peso", ganhar:"Ganhar massa muscular" })[value] || "Não informado";
+    }
+
+    function renderProfileData(){
+      const calorie = loadCalorieProfile();
+      const fat = loadFatProfile();
+      const diet = loadDietProgress();
+      const training = loadTrainingLevel();
+      const hydration = loadHydration();
+      const sleep = loadSleepQuiz();
+      let login = {};
+      try{ login = JSON.parse(localStorage.getItem("start_member_login_email_v1") || "{}") || {}; }catch(e){}
+      const gender = (diet && diet.gender) || calorie.gender || fat.gender;
+      const personalGrid = document.getElementById("profilePersonalGrid");
+      const technicalGrid = document.getElementById("profileTechnicalGrid");
+      personalGrid.innerHTML = "";
+      technicalGrid.innerHTML = "";
+
+      const personalItems = [
+        ["Nome", login.name || "Não informado", true],
+        ["E-mail", login.email || "Não informado", true],
+        ["Gênero", gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : "Não informado"],
+        ["Idade", calorie.age ? `${calorie.age} anos` : "Não informado"],
+        ["Altura", (calorie.height || fat.height) ? `${calorie.height || fat.height} cm` : "Não informado"],
+        ["Peso", calorie.weight ? `${calorie.weight} kg` : "Não informado"]
+      ];
+      const technicalItems = [
+        ["Atividade", profileActivityLabel(calorie.activity)],
+        ["Objetivo", profileGoalLabel(calorie.goal)],
+        ["Meta de calorias", calorie.calories ? `${Number(calorie.calories).toLocaleString("pt-BR")} kcal/dia` : "Não calculada"],
+        ["Gordura corporal", fat.percentage ? `${String(fat.percentage).replace(".", ",")}%` : "Não calculada"],
+        ["Nível de treinamento", training.level || "Não avaliado", true],
+        ["Meta de água", hydration.idealLiters ? `${String(hydration.idealLiters).replace(".", ",")} L/dia` : "Não calculada"],
+        ["Consumo de água", hydration.liters ? `${String(hydration.liters).replace(".", ",")} L/dia` : "Não informado"],
+        ["Qualidade do sono", Number.isFinite(Number(sleep.grade)) ? `${sleep.grade}/10` : "Não avaliada", true]
+      ];
+
+      function appendProfileItems(grid, items){
+        items.forEach(([label, value, full]) => {
+        const item = document.createElement("div");
+        item.className = "profileItem" + (full ? " full" : "");
+        const labelEl = document.createElement("span");
+        labelEl.className = "profileLabel";
+        labelEl.textContent = label;
+        const valueEl = document.createElement("span");
+        valueEl.className = "profileValue";
+        valueEl.textContent = value;
+        item.append(labelEl, valueEl);
+        grid.appendChild(item);
+        });
+      }
+      appendProfileItems(personalGrid, personalItems);
+      appendProfileItems(technicalGrid, technicalItems);
+    }
+
+    function selectProfileTab(tabName){
+      document.querySelectorAll("[data-profile-tab]").forEach(button => {
+        const active = button.dataset.profileTab === tabName;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-selected", String(active));
+      });
+      document.getElementById("profilePersonalPane").classList.toggle("active", tabName === "personal");
+      document.getElementById("profileTechnicalPane").classList.toggle("active", tabName === "technical");
+    }
+
+    document.querySelectorAll("[data-profile-tab]").forEach(button => {
+      button.addEventListener("click", () => selectProfileTab(button.dataset.profileTab));
+    });
+
+    document.getElementById("profileBtn")?.addEventListener("click", event => {
+      event.stopPropagation();
+      renderProfileData();
+      selectProfileTab("personal");
+      document.getElementById("profileOverlay").classList.toggle("open");
+      document.querySelector(".headerMenu").classList.remove("open");
+    });
+    document.getElementById("profileEdit").addEventListener("click", () => {
+      document.getElementById("profileOverlay").classList.remove("open");
+      openCalorieWizard();
+    });
+    document.getElementById("profileOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+    document.getElementById("headerLogoBtn").addEventListener("click", event => {
+      event.preventDefault();
+      showMemberNotice();
+      document.getElementById("profileOverlay").classList.remove("open");
+      document.querySelector(".headerMenu")?.classList.remove("open");
+    });
+    document.getElementById("backToAppBtn")?.addEventListener("click", () => {
+      window.location.href = document.getElementById("headerLogoBtn").href;
+    });
+
+    const TRAINING_PROGRESS_KEY = "start_training_phases_v1";
+    const TRAINING_PHASES = {
+      homem:[
+        "https://drive.google.com/file/d/1dlpGh1sbQPKh3bCkMTSo8IB2-S2VY4Qd/view?usp=drive_link",
+        "https://drive.google.com/file/d/1FJE72RWdAwSBVpLuSeifFGOdwHHOGsbY/view?usp=sharing",
+        "https://drive.google.com/file/d/1CXunNYI4EvImQJNbr6hN4jMU-VhoeGDW/view?usp=drive_link"
+      ],
+      mulher:[
+        "https://drive.google.com/file/d/1ewaumWIo7xQOmUxV37yO_2UoYL1p_IFh/view?usp=drive_link",
+        "https://drive.google.com/file/d/1jDbgUNlczzNgtVhtkZQnYUkCR9UkG0r6/view?usp=drive_link",
+        "https://drive.google.com/file/d/15i4FAqA-fav8wcH1mLTcpstVewvO2cSY/view?usp=drive_link"
+      ]
+    };
+
+    function loadTrainingProgress(){
+      try{
+        const data = JSON.parse(localStorage.getItem(TRAINING_PROGRESS_KEY) || "null");
+        return data && TRAINING_PHASES[data.gender] && Number(data.startedAt) ? data : null;
+      }catch(e){ return null; }
+    }
+
+    function getSavedGender(){
+      const diet = loadDietProgress();
+      const calorie = loadCalorieProfile();
+      const fat = loadFatProfile();
+      return (diet && diet.gender) || calorie.gender || fat.gender || null;
+    }
+
+    function startTrainingPlan(){
+      const gender = getSavedGender();
+      if(gender && TRAINING_PHASES[gender]){
+        const progress = { gender, startedAt:Date.now() };
+        localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(progress));
+        if(current && current.trainingDownload) renderLinks(current);
+        window.open(TRAINING_PHASES[gender][0], "_blank", "noopener,noreferrer");
+      }else{
+        document.getElementById("trainingGenderOverlay").classList.add("open");
+      }
+    }
+
+    function renderTrainingActions(){
+      const box = document.createElement("div");
+      box.className = "dietActions";
+      let progress = loadTrainingProgress();
+      const savedGender = getSavedGender();
+
+      if(progress && savedGender && progress.gender !== savedGender){
+        progress.gender = savedGender;
+        localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(progress));
+      }
+
+      if(!progress){
+        const start = document.createElement("button");
+        start.type = "button";
+        start.className = "linkBtn primary dietPhaseBtn";
+        start.textContent = "Acessar treino — Fase 1";
+        start.addEventListener("click", startTrainingPlan);
+        box.appendChild(start);
+        return box;
+      }
+
+      const DAY = 24 * 60 * 60 * 1000;
+      const unlockTimes = [progress.startedAt, progress.startedAt + 42 * DAY, progress.startedAt + 84 * DAY];
+      TRAINING_PHASES[progress.gender].forEach((url, index) => {
+        const unlocked = Date.now() >= unlockTimes[index];
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn dietPhaseBtn" + (unlocked ? "" : " locked");
+        if(unlocked){
+          button.textContent = `Abrir treino — Fase ${index + 1}`;
+          button.addEventListener("click", () => window.open(url, "_blank", "noopener,noreferrer"));
+        }else{
+          const date = new Date(unlockTimes[index]).toLocaleDateString("pt-BR");
+          button.textContent = `Fase ${index + 1} — disponível em ${date}`;
+          button.disabled = true;
+        }
+        box.appendChild(button);
+      });
+      return box;
+    }
+
+    document.querySelectorAll("[data-training-gender]").forEach(button => {
+      button.addEventListener("click", () => {
+        const gender = button.dataset.trainingGender;
+        const profile = loadCalorieProfile();
+        profile.gender = gender;
+        localStorage.setItem(CALORIE_PROFILE_KEY, JSON.stringify(profile));
+        const progress = { gender, startedAt:Date.now() };
+        localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(progress));
+        document.getElementById("trainingGenderOverlay").classList.remove("open");
+        if(current && current.trainingDownload) renderLinks(current);
+        window.open(TRAINING_PHASES[gender][0], "_blank", "noopener,noreferrer");
+      });
+    });
+    document.getElementById("trainingGenderCancel").addEventListener("click", () => document.getElementById("trainingGenderOverlay").classList.remove("open"));
+    document.getElementById("trainingGenderOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    function renderLinks(lesson){
+      linksEl.innerHTML = "";
+      if(lesson.networking){
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'linkBtn primary';
+        button.textContent = 'Entrar no grupo de networking';
+        button.disabled = true;
+        button.title = 'Link do grupo ainda não configurado';
+        const configure = () => {
+          const group = document.getElementById('groupBtn');
+          if(group && !group.disabled){
+            button.disabled = false;
+            button.removeAttribute('title');
+            button.addEventListener('click',() => group.click());
+          }
+        };
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',configure,{once:true});
+        else configure();
+        linksEl.appendChild(button);
+        return;
+      }
+
+      if(lesson.congratulations){
+        const card = document.createElement('section');
+        card.className = 'finalOffer';
+        card.setAttribute('aria-labelledby','finalOfferTitle');
+        card.innerHTML = `<div class="finalOfferHeading"><div class="finalOfferIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 5.2 2 2 0 0 1 5.1 3h3a1 1 0 0 1 1 .9c.1 1 .3 1.9.7 2.8a1 1 0 0 1-.2 1.1L8.2 9.2a16 16 0 0 0 6.6 6.6l1.4-1.4a1 1 0 0 1 1.1-.2c.9.4 1.8.6 2.8.7a1 1 0 0 1 .9 1z"/></svg></div>
+          <div><span class="finalOfferBadge">Exclusivo para membros</span>
+          <h3 id="finalOfferTitle">Diagnóstico Individual</h3></div></div>
+          <p>Tenha uma call exclusiva com um gestor que já gerenciou <strong>milhões de reais em anúncios</strong> e receba um diagnóstico completo.</p>
+          <button class="finalOfferAction" type="button" disabled title="Link do WhatsApp ainda não configurado">Agendar agora ↗</button>`;
+        const action = card.querySelector('button');
+        const configure = () => {
+          const whatsappAction = document.getElementById('memberNoticeAction');
+          if(whatsappAction && !whatsappAction.disabled){
+            action.disabled = false;
+            action.removeAttribute('title');
+            action.addEventListener('click',() => whatsappAction.click());
+          }
+        };
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',configure,{once:true});
+        else configure();
+        linksEl.appendChild(card);
+        return;
+      }
+
+      if(lesson.dietPlan){
+        linksEl.appendChild(renderDietActions());
+        return;
+      }
+      if(lesson.objectiveQuiz){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn primary";
+        button.textContent = "Descobrir meu objetivo";
+        button.addEventListener("click", openObjectiveQuiz);
+        linksEl.appendChild(button);
+        return;
+      }
+      if(lesson.calorieCalculator){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn primary";
+        button.textContent = "Calcular minhas calorias";
+        button.addEventListener("click", openCalorieWizard);
+        linksEl.appendChild(button);
+        return;
+      }
+      if(lesson.bodyFatCalculator){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn primary";
+        button.textContent = "Calcular % de Gordura";
+        button.addEventListener("click", openFatWizard);
+        linksEl.appendChild(button);
+        return;
+      }
+      if(lesson.trainingLevelQuiz){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn primary";
+        button.textContent = "Descobrir meu nível";
+        button.addEventListener("click", openTrainingQuiz);
+        linksEl.appendChild(button);
+        return;
+      }
+      if(lesson.trainingDownload){
+        linksEl.appendChild(renderTrainingActions());
+        return;
+      }
+      if(lesson.hydrationCalculator){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn primary";
+        button.textContent = "Calcular minha água";
+        button.addEventListener("click", openHydrationCalculator);
+        linksEl.appendChild(button);
+        return;
+      }
+      if(lesson.sleepQuiz){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "linkBtn primary";
+        button.textContent = "Avaliar meu sono";
+        button.addEventListener("click", openSleepQuiz);
+        linksEl.appendChild(button);
+        return;
+      }
+      (lesson.links || []).forEach(l => linksEl.appendChild(makeLinkBtn(l.label, l.url, !!l.primary)));
+    }
+
+    function setIframe(lesson){
+      const player = document.getElementById("playerWrapper");
+      if(lesson.embed){
+        player.style.display = "block";
+        player.classList.add("materialEmbed");
+        yt.title = `${lesson.title} — arquivos disponíveis para download`;
+        yt.removeAttribute("allow");
+        yt.removeAttribute("allowfullscreen");
+        yt.src = lesson.embed;
+        return;
+      }
+
+      player.classList.remove("materialEmbed");
+      yt.title = "Aula";
+      yt.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+      yt.setAttribute("allowfullscreen", "");
+      if(!lesson.video){
+        yt.src = "about:blank";
+        player.style.display = "none";
+        return;
+      }
+      player.style.display = "block";
+      const embed = buildEmbedUrl(lesson.video);
+      yt.src = embed || "about:blank";
+    }
+
+    function updatePlayerUI(){
+      if(!current) return;
+      lessonTitleEl.textContent = current.id === "1"
+        ? "Bem-vindo à nossa Área de Membros."
+        : cleanDisplayTitle(current.title);
+      lessonTagEl.textContent = cleanDisplayTitle(current.moduleTitle) || "START";
+      lessonDescEl.textContent = current.desc || "Sem descrição.";
+      renderLinks(current);
+      renderStars(Number(state.rating[current.id] || 0));
+      const lessonIndex = getLessonIndexById(current.id);
+      prevBtn.disabled = lessonIndex <= 0;
+      nextBtn.disabled = lessonIndex < 0 || lessonIndex >= flat.length - 1;
+      setIframe(current);
+    }
+
+    function goToLesson(offset){
+      if(!current) return;
+      const lessonIndex = getLessonIndexById(current.id);
+      if(lessonIndex < 0) return;
+      const targetLesson = flat[lessonIndex + offset];
+      if(!targetLesson) return;
+      selectLesson(targetLesson.id);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+    prevBtn.addEventListener("click", () => goToLesson(-1));
+    nextBtn.addEventListener("click", () => goToLesson(1));
+
+    function normalizePlanName(value){
+      return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
+
+    function hasEliteAccess(){
+      let login = {};
+      try{ login = JSON.parse(localStorage.getItem("start_member_login_email_v1") || "{}") || {}; }catch(e){}
+      const product = normalizePlanName(login.product || login.produto || login.plan || login.plano);
+      const productId = normalizePlanName(login.productId || login.produtoId || "");
+      return productId === "8459350" || productId === "elite" || product.includes("elite");
+    }
+
+    function isEliteLockedModule(moduleId){
+      return ["m4", "m5", "m6"].includes(moduleId) && !hasEliteAccess();
+    }
+
+    function showEliteUpgradeOffer(){
+      const link = document.getElementById("eliteUpgradeLink");
+      if(link){
+        const st = loadAreaState_() || {};
+        link.href = appendUtmToUrl_("https://pay.hotmart.com/V107476471D?off=zkggralm&checkoutMode=10", CURRENT_UTMS || st.utms || null);
+      }
+      document.getElementById("eliteOfferOverlay").classList.add("open");
+    }
+
+    document.getElementById("eliteOfferClose").addEventListener("click", () => document.getElementById("eliteOfferOverlay").classList.remove("open"));
+    document.getElementById("eliteOfferOverlay").addEventListener("click", event => {
+      if(event.target === event.currentTarget) event.currentTarget.classList.remove("open");
+    });
+
+    function renderModules(){
+      modulesEl.innerHTML = "";
+      const selectedModuleId = state.openModuleId || modulesData[0]?.id;
+      modulesData.forEach((mod, moduleIndex) => {
+const modWrap = document.createElement("div");
+const isLockedModule = isEliteLockedModule(mod.id);
+const isOpen = mod.id === selectedModuleId && !moduleMenuCollapsed;
+modWrap.className = "modItem" + (mod.id === selectedModuleId ? " activeModule" : "") + (isOpen ? " open" : "") + (isLockedModule ? " lockedModule" : "");
+modWrap.dataset.moduleId = mod.id;
+        
+        const head = document.createElement("button");
+        head.type = "button";
+        head.className = "modHeader";
+        head.setAttribute("aria-expanded", String(isOpen));
+        head.setAttribute("aria-controls", `module-body-${mod.id}`);
+        head.style.setProperty("background", "var(--brand-green)", "important");
+        head.style.setProperty("color", "#fff", "important");
+        head.innerHTML = `
+          <div class="modTitle">
+            <span>${moduleIndex + 1}. ${cleanDisplayTitle(mod.title)}</span>
+            ${isLockedModule ? '<span class="moduleLock" aria-label="Bloqueado">🔒</span>' : ''}
+          </div>
+          <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        `;
+        head.querySelector(".modTitle")?.style.setProperty("color", "#fff", "important");
+        head.querySelector(".chev")?.style.setProperty("color", "#fff", "important");
+        head.addEventListener("click", () => {
+          if(mod.id !== selectedModuleId) registerMemberNavigation();
+          moduleMenuCollapsed = mod.id === selectedModuleId ? !moduleMenuCollapsed : false;
+          state.openModuleId = mod.id;
+          saveState();
+          renderModules();
+          paintActiveLesson();
+          [...modulesEl.children].find(item => item.dataset.moduleId === mod.id)?.querySelector(".modHeader")?.focus({ preventScroll: true });
+        });
+
+        const body = document.createElement("div");
+        body.className = "modBody";
+        body.id = `module-body-${mod.id}`;
+        body.inert = !isOpen;
+
+        mod.lessons.forEach(lesson => {
+          const item = document.createElement("div");
+          item.className = "lessonItem";
+          item.dataset.lessonId = lesson.id;
+          
+          const rate = Math.max(0, Math.min(5, Math.round(Number(state.rating[lesson.id]) || 0)));
+          const hasVideo = !!lesson.video;
+          const isFeaturedLesson = !!(lesson.dietPlan || lesson.trainingDownload);
+
+          item.innerHTML = `
+            <div class="liContent">
+              <span class="liName">${lesson.id === "1" ? "Bem-vindo à nossa Área de Membros." : cleanDisplayTitle(lesson.title)}${isFeaturedLesson ? '<span class="featuredStar lessonTitleStar" aria-label="Destaque">★</span>' : ''}</span>
+              <div class="liMeta">
+                <span class="badge ${hasVideo ? 'vid' : 'mat'}">${hasVideo ? 'VÍDEO' : 'MATERIAL'}</span>
+                ${rate > 0 ? `<span class="badge rate" aria-label="Avaliação: ${rate} de 5 estrelas">${'★'.repeat(rate)}</span>` : ''}
+              </div>
+            </div>
+            <div class="lessonRight">
+              <div class="statusIcon">
+                 ${isLockedModule
+                   ? '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>'
+                   : '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'}
+              </div>
+            </div>
+          `;
+          item.addEventListener("click", () => {
+            if(isLockedModule){
+              showEliteUpgradeOffer();
+              return;
+            }
+            selectLesson(lesson.id);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+          body.appendChild(item);
+        });
+
+        modWrap.appendChild(head);
+        modWrap.appendChild(body);
+        modulesEl.appendChild(modWrap);
+      });
+    }
+
+function paintActiveLesson(){
+  document.querySelectorAll(".lessonItem").forEach(el => {
+    el.classList.toggle("active", current && el.dataset.lessonId === current.id);
+  });
+
+  document.querySelectorAll(".modItem").forEach(el => {
+    el.classList.toggle("activeModule", el.dataset.moduleId === (state.openModuleId || current?.moduleId));
+  });
+}
+
+    function openModuleIfNeeded(moduleId){
+      if(state.openModuleId !== moduleId || moduleMenuCollapsed){
+        state.openModuleId = moduleId;
+        moduleMenuCollapsed = false;
+        saveState();
+        renderModules();
+      }
+    }
+
+    function updateLessonUrl(id, mode){
+      if(mode === "none") return;
+      const url = new URL(window.location.href);
+      url.searchParams.set("aula", id);
+      const stateData = { ...(history.state || {}), lessonId:id };
+      if(mode === "replace") history.replaceState(stateData, "", url.toString());
+      else if(url.toString() !== window.location.href) history.pushState(stateData, "", url.toString());
+    }
+
+    function setMemberBottomNavActive(section){
+      document.querySelectorAll("[data-bottom-section]").forEach(item => {
+        const active = item.dataset.bottomSection === section;
+        item.classList.toggle("active", active);
+        if(active) item.setAttribute("aria-current", "page");
+        else item.removeAttribute("aria-current");
+      });
+    }
+
+    function selectLesson(id, urlMode = "push"){
+      const lesson = flat.find(x => x.id === id);
+      if(!lesson) return false;
+      if(isEliteLockedModule(lesson.moduleId)){
+        showEliteUpgradeOffer();
+        return false;
+      }
+      const previousModuleId = state.openModuleId || current?.moduleId;
+      current = lesson;
+      setMemberBottomNavActive(lesson.dietPlan ? "diet" : lesson.moduleId === "m3" ? "training" : "members");
+      state.lastLessonId = lesson.id;
+      openModuleIfNeeded(lesson.moduleId);
+      saveState();
+      updatePlayerUI();
+      paintActiveLesson();
+      updateLessonUrl(lesson.id, urlMode);
+      if(previousModuleId && previousModuleId !== lesson.moduleId && urlMode === "push") registerMemberNavigation();
+      return true;
+    }
+
+    renderModules();
+
+    const lessonFromUrl = new URL(window.location.href).searchParams.get("aula");
+    const startId = (lessonFromUrl && flat.some(x => x.id === lessonFromUrl))
+      ? lessonFromUrl
+      : ((state.lastLessonId && flat.some(x => x.id === state.lastLessonId))
+          ? state.lastLessonId
+          : (flat[0] ? flat[0].id : null));
+
+    if(startId){
+      const startLesson = flat.find(x => x.id === startId);
+      if(startLesson){
+        state.openModuleId = state.openModuleId || startLesson.moduleId;
+        saveState();
+      }
+      renderModules();
+      selectLesson(startId, "replace");
+    }
+
+    function showMemberContent(){
+      document.getElementById("profileOverlay")?.classList.remove("open");
+    }
+
+    document.getElementById("memberBottomNav")?.addEventListener("click", event => {
+      if(event.target.closest(".memberBottomNavItem")) document.getElementById("profileOverlay")?.classList.remove("open");
+    });
+
+    document.getElementById("bottomDietBtn")?.addEventListener("click", () => {
+      showMemberContent();
+      selectLesson("2.1");
+      openDietQuiz();
+    });
+    document.getElementById("bottomTrainingBtn")?.addEventListener("click", () => {
+      document.getElementById("profileOverlay")?.classList.remove("open");
+      closeDietViewer();
+      const savedProgress = loadTrainingProgress();
+      const savedGender = (savedProgress && savedProgress.gender) || getSavedGender();
+      if(savedGender && TRAINING_PHASES[savedGender]){
+        if(!savedProgress) localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify({ gender:savedGender, startedAt:Date.now() }));
+        setMemberBottomNavActive("training");
+        window.open(TRAINING_PHASES[savedGender][0], "_blank", "noopener,noreferrer");
+        return;
+      }
+      showMemberContent();
+      if(selectLesson("3.2")) window.scrollTo({ top:0, behavior:"smooth" });
+    });
+    document.getElementById("bottomMembersBtn")?.addEventListener("click", () => {
+      closeDietViewer();
+      showMemberContent();
+      if(selectLesson("1")) window.scrollTo({ top:0, behavior:"smooth" });
+    });
+    window.addEventListener("popstate", () => {
+      const id = new URL(window.location.href).searchParams.get("aula");
+      if(id && flat.some(lesson => lesson.id === id)){
+        selectLesson(id, "none");
+        window.scrollTo({ top:0, behavior:"smooth" });
+      }
+    });
+  </script>
+
+
+<script>
+  /* ===================== LOGIN START / APPS SCRIPT ===================== */
+
+  const LOGIN_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNqgKlbIqxO_DT-_m-9DZsHnZKKsYQOQJ3qwHHDC_oIsmMAf4f5ekUTU5UgdrslWlZbQ/exec";
+  const LOGIN_STORAGE_KEY = "start_member_login_email_v1";
+
+
+  // Acesso temporário de desenvolvimento. Remover ao integrar o backend do checkout.
+  const TEMP_FRONTEND_LOGIN = { enabled:true, email:"admin@admin.com" };
+  function getTemporaryLogin_(email){
+    if(!TEMP_FRONTEND_LOGIN.enabled || normalizeEmail_(email) !== TEMP_FRONTEND_LOGIN.email) return null;
+    return { ok:true, email:TEMP_FRONTEND_LOGIN.email, name:"Admin", access:"vitalicio", product:"Profissional do Futuro" };
+  }
+
+  function normalizeEmail_(email){
+    return String(email || "").trim().toLowerCase();
+  }
+
+  function loadLogin_(){
+    try{
+      const raw = localStorage.getItem(LOGIN_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){
+      return null;
+    }
+  }
+
+function saveLogin_(data){
+  try{
+    localStorage.setItem(LOGIN_STORAGE_KEY, JSON.stringify({
+      email: normalizeEmail_(data.email),
+      name: data.name || "",
+      access: data.access || "vitalicio",
+      product: data.product || data.Product || data.produto || data.Produto || data.plan || data.plano || "",
+      productId: String(data.productId || data.product_id || data.produtoId || data.produto_id || data.ProdutoId || ""),
+      loggedAt: Date.now()
+    }));
+  }catch(e){}
+}
+
+  function clearLogin_(){
+    try{
+      localStorage.removeItem(LOGIN_STORAGE_KEY);
+    }catch(e){}
+  }
+
+  function setLoginMessage_(text, type){
+    const msg = document.getElementById("loginMsg");
+    if(!msg) return;
+
+    msg.textContent = text || "";
+    msg.className = "loginMsg" + (type ? " " + type : "");
+  }
+
+  function showArea_(){
+    document.body.classList.remove("auth-locked");
+    document.body.classList.add("auth-ok");
+  }
+
+  function showLogin_(){
+    document.body.classList.add("auth-locked");
+    document.body.classList.remove("auth-ok");
+  }
+
+  function jsonpLogin_(email){
+    const temporaryLogin = getTemporaryLogin_(email);
+    if(temporaryLogin) return Promise.resolve(temporaryLogin);
+    return new Promise((resolve, reject) => {
+      const callbackName = "startLoginCallback_" + Math.random().toString(36).slice(2);
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error("Tempo esgotado. Tente novamente."));
+      }, 12000);
+
+      function cleanup(){
+        clearTimeout(timeout);
+        try{
+          delete window[callbackName];
+        }catch(e){
+          window[callbackName] = undefined;
+        }
+
+        if(script && script.parentNode){
+          script.parentNode.removeChild(script);
+        }
+      }
+
+      window[callbackName] = (response) => {
+        cleanup();
+        resolve(response);
+      };
+
+      const params = new URLSearchParams({
+        action: "login",
+        email: normalizeEmail_(email),
+        callback: callbackName
+      });
+
+      const script = document.createElement("script");
+      script.src = LOGIN_SCRIPT_URL + "?" + params.toString();
+
+      script.onerror = () => {
+        cleanup();
+        reject(new Error("Não foi possível conectar."));
+      };
+
+      document.body.appendChild(script);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const saved = loadLogin_();
+
+    const form = document.getElementById("loginForm");
+    const emailInput = document.getElementById("loginEmail");
+    const submitBtn = document.getElementById("loginSubmit");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+
+if(saved && saved.email){
+  // Abre a área imediatamente
+  showArea_();
+
+  // Valida em segundo plano se ainda está ATIVO
+  jsonpLogin_(saved.email)
+    .then((res) => {
+      if(res && res.ok){
+        saveLogin_({
+          ...res,
+          ...(res.user || {}),
+          email: saved.email
+        });
+        if(typeof renderModules === "function"){
+          renderModules();
+          paintActiveLesson();
+        }
+      }else{
+        clearLogin_();
+        showLogin_();
+        setLoginMessage_("Seu acesso não está ativo. Faça login novamente.", "error");
+      }
+    })
+    .catch(() => {
+      // Se der erro momentâneo na validação, não desloga de imediato
+      console.warn("Não foi possível validar o acesso agora.");
+    });
+
+}else{
+  showLogin_();
+}
+
+    if(logoutBtn){
+      logoutBtn.addEventListener("click", () => {
+        clearLogin_();
+        showLogin_();
+        setLoginMessage_("Você saiu da área de membros.", "");
+      });
+    }
+
+    if(form){
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = normalizeEmail_(emailInput.value);
+
+if(!email){
+  setLoginMessage_("Preencha seu e-mail.", "error");
+  return;
+}
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Verificando...";
+        setLoginMessage_("Buscando seu acesso...", "");
+
+        try{
+          const res = await jsonpLogin_(email);
+
+          if(res && res.ok){
+            saveLogin_({
+  ...res,
+  ...(res.user || {}),
+  email: email
+});
+            setLoginMessage_("Acesso liberado.", "ok");
+            showArea_();
+            if(typeof renderModules === "function"){
+              renderModules();
+              paintActiveLesson();
+            }
+          }else{
+            clearLogin_();
+            showLogin_();
+            setLoginMessage_((res && res.message) ? res.message : "Email não encontrado ou sem acesso ativo.", "error");
+          }
+        }catch(err){
+          setLoginMessage_(err.message || "Erro ao fazer login.", "error");
+        }finally{
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Entrar";
+        }
+      });
+    }
+  });
+</script>
+<script>
+  const START_LOCALE_KEY = "start_locale_v1";
+  const ptPtReplacements = [
+    ["Instalar aplicativo", "Instalar aplicação"],
+    ["instalar aplicativo", "instalar aplicação"],
+    ["Aplicativo", "Aplicação"], ["aplicativo", "aplicação"],
+    ["Baixar guia de exercícios", "Descarregar guia de exercícios"],
+    ["Baixar material", "Descarregar material"],
+    ["Baixe este material", "Descarregue este material"],
+    ["BAIXAR", "DESCARREGAR"], ["Baixar", "Descarregar"], ["baixar", "descarregar"],
+    ["Abrir pasta de treinos", "Abrir pasta de treinos"],
+    ["arquivo correspondente", "ficheiro correspondente"],
+    ["arquivos", "ficheiros"], ["arquivo", "ficheiro"],
+    ["Arquivo", "Ficheiro"],
+    ["Nível de Treinamento", "Nível de Treino"],
+    ["nível de treinamento", "nível de treino"],
+    ["Treinamento", "Treino"], ["treinamento", "treino"],
+    ["Planejamento", "Planeamento"], ["planejamento", "planeamento"],
+    ["Monitoramento", "Monitorização"], ["monitoramento", "monitorização"],
+    ["Compartilhar", "Partilhar"], ["compartilhar", "partilhar"],
+    ["tela inicial", "ecrã principal"], ["Tela de Início", "Ecrã principal"],
+    ["área de trabalho", "ecrã principal"],
+    ["celular", "telemóvel"], ["Celular", "Telemóvel"],
+    ["Faça login novamente", "Inicie sessão novamente"],
+    ["Você saiu da área de membros", "Terminou a sessão na área de membros"],
+    ["Sair", "Terminar sessão"],
+    ["Calcular minhas calorias", "Calcular as minhas calorias"],
+    ["Calcular minha água", "Calcular a minha água"],
+    ["Descobrir meu nível", "Descobrir o meu nível"],
+    ["Descobrir meu objetivo", "Descobrir o meu objetivo"],
+    ["Ver meu diagnóstico", "Ver o meu diagnóstico"],
+    ["Refazer avaliação", "Repetir avaliação"],
+    ["Meus dados", "Os meus dados"],
+    ["E-mail da compra", "E-mail utilizado na compra"],
+    ["Preencha seu e-mail", "Preencha o seu e-mail"],
+    ["Buscando seu acesso", "A procurar o seu acesso"],
+    ["Seu acesso", "O seu acesso"], ["seu acesso", "o seu acesso"],
+    ["Clique", "Carregue"], ["clique", "carregue"]
+  ];
+  const localeOriginalText = new WeakMap();
+  const localeOriginalAttrs = new WeakMap();
+  let currentStartLocale = "pt-BR";
+  let localeObserver = null;
+
+  function detectStartLocale(){
+    const saved = localStorage.getItem(START_LOCALE_KEY);
+    if(saved === "pt-BR" || saved === "pt-PT") return saved;
+    const languages = [navigator.language, ...(navigator.languages || [])].filter(Boolean).map(value => value.toLowerCase());
+    let timeZone = "";
+    try{ timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; }catch(e){}
+    return languages.some(value => value === "pt-pt" || value.startsWith("pt-pt-")) || /Europe\/(Lisbon|Madeira|Azores)/i.test(timeZone) ? "pt-PT" : "pt-BR";
+  }
+
+  function translatePtPt(value){
+    return ptPtReplacements.reduce((text, pair) => text.split(pair[0]).join(pair[1]), String(value || ""));
+  }
+
+  function localizeNode(root){
+    if(!root) return;
+    const nodes = [];
+    if(root.nodeType === Node.TEXT_NODE) nodes.push(root);
+    else if(root.nodeType === Node.ELEMENT_NODE){
+      if(!["SCRIPT", "STYLE", "NOSCRIPT"].includes(root.tagName)){
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+          acceptNode: node => node.parentElement && !["SCRIPT", "STYLE", "NOSCRIPT"].includes(node.parentElement.tagName) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+        });
+        while(walker.nextNode()) nodes.push(walker.currentNode);
+      }
+      const elements = [root, ...root.querySelectorAll("[placeholder],[aria-label],[title]")];
+      elements.forEach(element => {
+        if(!localeOriginalAttrs.has(element)){
+          const originals = {};
+          ["placeholder", "aria-label", "title"].forEach(name => { if(element.hasAttribute(name)) originals[name] = element.getAttribute(name); });
+          localeOriginalAttrs.set(element, originals);
+        }
+        const originals = localeOriginalAttrs.get(element);
+        Object.keys(originals).forEach(name => element.setAttribute(name, currentStartLocale === "pt-PT" ? translatePtPt(originals[name]) : originals[name]));
+      });
+    }
+    nodes.forEach(node => {
+      if(!localeOriginalText.has(node)) localeOriginalText.set(node, node.nodeValue);
+      const original = localeOriginalText.get(node);
+      node.nodeValue = currentStartLocale === "pt-PT" ? translatePtPt(original) : original;
+    });
+  }
+
+  function applyStartLocale(locale, persist){
+    currentStartLocale = locale === "pt-PT" ? "pt-PT" : "pt-BR";
+    if(persist) localStorage.setItem(START_LOCALE_KEY, currentStartLocale);
+    document.documentElement.lang = currentStartLocale.toLowerCase();
+    if(localeObserver) localeObserver.disconnect();
+    localizeNode(document.body);
+    const languageButton = document.getElementById("languageBtn");
+    if(languageButton) languageButton.textContent = currentStartLocale === "pt-PT" ? "Idioma: PT" : "Idioma: BR";
+    document.querySelectorAll("[data-locale-menu-choice]").forEach(button => button.classList.toggle("active", button.dataset.localeMenuChoice === currentStartLocale));
+    if(localeObserver) localeObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    localeObserver = new MutationObserver(mutations => {
+      localeObserver.disconnect();
+      mutations.forEach(mutation => {
+        if(mutation.type === "characterData"){
+          localeOriginalText.set(mutation.target, mutation.target.nodeValue);
+          localizeNode(mutation.target);
+        }else mutation.addedNodes.forEach(localizeNode);
+      });
+      localeObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+    });
+    applyStartLocale(detectStartLocale(), false);
+    document.getElementById("languageBtn")?.addEventListener("click", event => {
+      event.stopPropagation();
+      const item = document.getElementById("languageMenuItem");
+      const open = !item.classList.contains("open");
+      item.classList.toggle("open", open);
+      event.currentTarget.setAttribute("aria-expanded", String(open));
+    });
+    document.getElementById("languageClose")?.addEventListener("click", () => document.getElementById("languageOverlay").classList.remove("open"));
+    document.querySelectorAll("[data-locale-choice]").forEach(button => button.addEventListener("click", () => {
+      document.getElementById("languageOverlay").classList.remove("open");
+      applyStartLocale(button.dataset.localeChoice, true);
+    }));
+    document.querySelectorAll("[data-locale-menu-choice]").forEach(button => button.addEventListener("click", event => {
+      event.stopPropagation();
+      applyStartLocale(button.dataset.localeMenuChoice, true);
+      document.getElementById("languageMenuItem")?.classList.remove("open");
+      document.getElementById("languageBtn")?.setAttribute("aria-expanded", "false");
+      document.querySelector(".headerMenu")?.classList.remove("open");
+    }));
+  });
+
+  let deferredInstallPrompt = null;
+
+  function isStartInstalled(){
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  }
+
+  function closeInstallNudge(){
+    const overlay = document.getElementById("installNudgeOverlay");
+    if(overlay) overlay.classList.remove("open");
+  }
+
+  async function requestStartInstall(){
+    if(!deferredInstallPrompt) return false;
+    await deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    const installButton = document.getElementById("installAppBtn");
+    if(installButton) installButton.hidden = choice.outcome === "accepted";
+    closeInstallNudge();
+    return true;
+  }
+
+  function showInstallNudge(){
+    if(isStartInstalled()) return;
+    const overlay = document.getElementById("installNudgeOverlay");
+    const message = document.getElementById("installNudgeMessage");
+    const action = document.getElementById("installNudgeAction");
+    if(!overlay || !message || !action) return;
+
+    const ua = navigator.userAgent || "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const isAndroid = /Android/i.test(ua);
+    const isSafari = isIOS && /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua);
+    const isChromeAndroid = isAndroid && /Chrome|CriOS/i.test(ua) && !/EdgA|OPR/i.test(ua);
+
+    action.onclick = closeInstallNudge;
+    action.textContent = "OK";
+
+    if(isIOS){
+      message.textContent = isSafari
+        ? 'No Safari, toque em "..." > Compartilhar > Adicionar à Tela de Início.'
+        : 'Abra no Safari e adicione à Tela de Início.';
+    }else if(isAndroid){
+      message.textContent = 'No Chrome, toque em "..." > Adicionar à tela inicial.';
+      if(isChromeAndroid && deferredInstallPrompt){
+        action.textContent = "Instalar agora";
+        action.onclick = requestStartInstall;
+      }
+    }else if(deferredInstallPrompt){
+      message.textContent = "Instale o Profissional do Futuro neste dispositivo.";
+      action.textContent = "Instalar agora";
+      action.onclick = requestStartInstall;
+    }else{
+      message.textContent = "Abra no Chrome e selecione Instalar aplicativo.";
+    }
+    overlay.classList.add("open");
+  }
+
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    const installButton = document.getElementById("installAppBtn");
+    if(installButton) installButton.hidden = false;
+    if(document.getElementById("installNudgeOverlay")?.classList.contains("open")) showInstallNudge();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    const installButton = document.getElementById("installAppBtn");
+    if(installButton) installButton.hidden = true;
+    closeInstallNudge();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuBtn = document.getElementById("menuBtn");
+    const headerMenu = document.querySelector(".headerMenu");
+    const installButton = document.getElementById("installAppBtn");
+    const installNudgeClose = document.getElementById("installNudgeClose");
+
+    if(installNudgeClose) installNudgeClose.addEventListener("click", closeInstallNudge);
+
+    if(installButton){
+      installButton.hidden = isStartInstalled();
+      installButton.addEventListener("click", async event => {
+        event.stopPropagation();
+        if(!await requestStartInstall()) showInstallNudge();
+      });
+    }
+
+    if(menuBtn && headerMenu){
+      menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        document.getElementById("profileOverlay")?.classList.remove("open");
+        headerMenu.classList.toggle("open");
+      });
+
+      document.getElementById("menuDropdown")?.addEventListener("click", event => {
+        if(event.target.closest("button") && event.target.closest("button").id !== "profileBtn"){
+          document.getElementById("profileOverlay")?.classList.remove("open");
+        }
+      });
+
+      document.addEventListener("click", () => {
+        headerMenu.classList.remove("open");
+      });
+    }
+
+  });
+
+  if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")){
+    window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+  }
+</script>
+
+
+<dialog class="memberNotice" id="memberNotice" aria-labelledby="memberNoticeTitle" aria-describedby="memberNoticeText">
+  <div class="memberNoticeHeader">
+    <div class="memberNoticeIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 5.2 2 2 0 0 1 5.1 3h3a1 1 0 0 1 1 .9c.1 1 .3 1.9.7 2.8a1 1 0 0 1-.2 1.1L8.2 9.2a16 16 0 0 0 6.6 6.6l1.4-1.4a1 1 0 0 1 1.1-.2c.9.4 1.8.6 2.8.7a1 1 0 0 1 .9 1z"/></svg></div>
+    <div><span class="memberNoticeBadge">★ OPORTUNIDADE EXCLUSIVA ★</span><h2 id="memberNoticeTitle">Diagnostico Individual</h2></div>
+    <button class="memberNoticeClose" id="memberNoticeClose" type="button" aria-label="Fechar notificação">×</button>
+  </div>
+  <div class="memberNoticeBody">
+    <p id="memberNoticeText">Tenha uma <b style="color:#f8fafc">call exclusiva</b> com um gestor que ja gerenciou <strong>milhoes de reais em ADS</strong> e receba um diagnostico completo da sua operacao.</p>
+    <button class="memberNoticeAction" id="memberNoticeAction" type="button" disabled title="Link do WhatsApp ainda não configurado">AGENDAR AGORA ↗</button>
+    <button class="memberNoticeLater" id="memberNoticeLater" type="button" autofocus>Mais tarde</button>
+  </div>
+</dialog>
+<script>
+  // WhatsApp para agendamento de Diagnóstico Individual.
+  const MEMBER_NOTICE_CONFIG = { whatsappUrl:"https://wa.me/5562984888498?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20reuni%C3%A3o%20para%20analisar%20minha%20opera%C3%A7%C3%A3o", message:null };
+  let memberModuleChanges = 0;
+  function registerMemberNavigation(){
+    memberModuleChanges += 1;
+    if(memberModuleChanges < 2) return;
+    memberModuleChanges = 0;
+    showMemberNotice();
+  }
+  function showMemberNotice(){
+    const dialog = document.getElementById('memberNotice');
+    if(dialog && !dialog.open) dialog.showModal();
+  }
+  (() => {
+    const dialog = document.getElementById('memberNotice');
+    const action = document.getElementById('memberNoticeAction');
+    const close = () => dialog.close();
+    document.getElementById('memberNoticeClose').addEventListener('click',close);
+    document.getElementById('memberNoticeLater').addEventListener('click',close);
+    dialog.addEventListener('click',event => { if(event.target === dialog){ const bounds = dialog.getBoundingClientRect(); if(event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) close(); } });
+    if(MEMBER_NOTICE_CONFIG.whatsappUrl){
+      action.disabled = false;
+      action.removeAttribute('title');
+      action.addEventListener('click',() => {
+        const url = new URL(MEMBER_NOTICE_CONFIG.whatsappUrl);
+        if(MEMBER_NOTICE_CONFIG.message) url.searchParams.set('text',MEMBER_NOTICE_CONFIG.message);
+        window.open(url.toString(),'_blank','noopener,noreferrer');
+        close();
+      });
+    }
+  })();
+</script>
+
+<script id="networking-group-link">
+  document.getElementById('groupBtn').addEventListener('click', event => {
+    window.open(event.currentTarget.dataset.groupUrl, '_blank', 'noopener,noreferrer');
+    document.querySelector('.headerMenu')?.classList.remove('open');
+  });
+</script>
+<script id="member-support-link">
+  document.getElementById('supportBtn').addEventListener('click', event => {
+    window.open(event.currentTarget.dataset.supportUrl, '_blank', 'noopener,noreferrer');
+    document.querySelector('.headerMenu')?.classList.remove('open');
+  });
+</script>
+</body>
+</html>
