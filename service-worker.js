@@ -1,4 +1,4 @@
-const CACHE_NAME = "profissional-do-futuro-v140";
+const CACHE_NAME = "profissional-do-futuro-v141";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./assets/app/profissional-do-futuro-logo-final.png", "./assets/app/favicon-32.png", "./assets/app/apple-touch-icon.png", "./assets/app/icon-192.png", "./assets/app/icon-512.png", "./assets/app/icon-maskable-512.png"];
 const SHELL_URLS = new Set(APP_SHELL.map(file => new URL(file, self.registration.scope).href));
 self.addEventListener("install", event => {
