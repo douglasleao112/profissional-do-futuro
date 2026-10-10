@@ -2,6 +2,16 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
+<script>
+  let deferredInstallPrompt = null;
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    const installButton = document.getElementById("installAppBtn");
+    if(installButton) installButton.hidden = false;
+    if(typeof showInstallNudge === "function" && document.getElementById("installNudgeOverlay")?.classList.contains("open")) showInstallNudge();
+  });
+</script>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
   <title>Profissional do Futuro - Área de Membros</title>
   <meta name="theme-color" content="#3b82f6" />
@@ -3675,7 +3685,7 @@ if(!email){
     }));
   });
 
-  let deferredInstallPrompt = null;
+
 
   function isStartInstalled(){
     return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
@@ -3687,14 +3697,25 @@ if(!email){
   }
 
   async function requestStartInstall(){
+    if(isStartInstalled()) return true;
     if(!deferredInstallPrompt) return false;
-    await deferredInstallPrompt.prompt();
-    const choice = await deferredInstallPrompt.userChoice;
+    const installPrompt = deferredInstallPrompt;
     deferredInstallPrompt = null;
     const installButton = document.getElementById("installAppBtn");
-    if(installButton) installButton.hidden = choice.outcome === "accepted";
-    closeInstallNudge();
-    return true;
+    if(installButton) installButton.disabled = true;
+    try {
+      // A chamada acontece diretamente no clique, no Android e no Windows.
+      await installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      if(installButton) installButton.hidden = choice.outcome === "accepted";
+      closeInstallNudge();
+      return true;
+    } catch(error) {
+      if(installButton) installButton.hidden = false;
+      return false;
+    } finally {
+      if(installButton) installButton.disabled = false;
+    }
   }
 
   function showInstallNudge(){
@@ -3728,18 +3749,14 @@ if(!email){
       action.textContent = "Instalar agora";
       action.onclick = requestStartInstall;
     }else{
-      message.textContent = "Abra no Chrome e selecione Instalar aplicativo.";
+      message.textContent = /Windows/i.test(ua) && /Chrome/i.test(ua)
+        ? 'No Chrome, clique no ícone de instalação na barra de endereço ou abra o menu ⋮ > Transmitir, salvar e compartilhar > Instalar página como app.'
+        : 'Abra esta página no Chrome e escolha Instalar aplicativo no menu do navegador.';
     }
     overlay.classList.add("open");
   }
 
-  window.addEventListener("beforeinstallprompt", event => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    const installButton = document.getElementById("installAppBtn");
-    if(installButton) installButton.hidden = false;
-    if(document.getElementById("installNudgeOverlay")?.classList.contains("open")) showInstallNudge();
-  });
+
 
   window.addEventListener("appinstalled", () => {
     deferredInstallPrompt = null;
