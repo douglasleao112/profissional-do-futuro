@@ -1298,6 +1298,7 @@ body.appIntroReady > *:not(script) { animation: appContentFadeIn .7s ease both; 
       <div id="menuDropdown" class="menuDropdown">
         <button id="supportBtn" type="button" data-support-url="https://wa.me/5562984888498?text=Ol%C3%A1%2C%20sou%20aluno%20do%20P.Futuro%20preciso%20de%20ajuda.">Suporte</button>
         <button id="groupBtn" type="button" data-group-url="https://chat.whatsapp.com/LN0HmBAZT6qH1DVMaSytac">Grupo</button>
+        <button id="installMenuBtn" type="button">Instalar aplicativo</button>
         <button id="logoutBtn" type="button">Sair</button>
       </div>
     </div>
@@ -3863,6 +3864,18 @@ if(!email){
   document.getElementById('supportBtn').addEventListener('click', event => {
     window.open(event.currentTarget.dataset.supportUrl, '_blank', 'noopener,noreferrer');
     document.querySelector('.headerMenu')?.classList.remove('open');
+  });
+</script>
+<script id="install-menu-action">
+  const installMenuButton = document.getElementById('installMenuBtn');
+  const updateInstallMenu = () => { installMenuButton.hidden = isStartInstalled(); };
+  updateInstallMenu();
+  window.addEventListener('appinstalled', () => { installMenuButton.hidden = true; });
+  window.matchMedia('(display-mode: standalone)').addEventListener('change', updateInstallMenu);
+  installMenuButton.addEventListener('click', async event => {
+    event.stopPropagation();
+    document.querySelector('.headerMenu')?.classList.remove('open');
+    if(!await requestStartInstall()) showInstallNudge();
   });
 </script>
 </body>
