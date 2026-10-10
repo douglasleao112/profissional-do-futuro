@@ -1260,6 +1260,11 @@ body.appIntroReady > *:not(script) { animation: appContentFadeIn .7s ease both; 
   @media(max-width:420px) { .finalOffer { padding:0; } }
 </style>
 
+<style id="install-badge-fade">
+  .pwaInstallButton { opacity:1; visibility:visible; transition:opacity .6s ease, visibility 0s; }
+  .pwaInstallButton.is-expired { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .6s ease, visibility 0s linear .6s; }
+  @media(prefers-reduced-motion:reduce) { .pwaInstallButton, .pwaInstallButton.is-expired { transition:none; } }
+</style>
 </head>
 
 
@@ -3877,6 +3882,17 @@ if(!email){
     document.querySelector('.headerMenu')?.classList.remove('open');
     if(!await requestStartInstall()) showInstallNudge();
   });
+</script>
+<script id="install-badge-timeout">
+  document.addEventListener('DOMContentLoaded', () => {
+    const badge = document.getElementById('installAppBtn');
+    if(!badge) return;
+    setTimeout(() => {
+      badge.classList.add('is-expired');
+      badge.inert = true;
+      badge.setAttribute('tabindex', '-1');
+    }, 60000);
+  }, { once:true });
 </script>
 </body>
 </html>
